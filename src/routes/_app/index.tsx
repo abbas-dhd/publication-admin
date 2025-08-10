@@ -1,4 +1,4 @@
-import CustomTable from "@/components/CustomTable";
+// import CustomTable from "@/components/CustomTable";
 
 import { createFileRoute } from "@tanstack/react-router";
 
@@ -10,7 +10,7 @@ function Index() {
   return (
     <div className="p-2">
       <h3>Welcome Home!</h3>
-      <CustomTable />
+      {/* <CustomTable /> */}
     </div>
   );
 }
