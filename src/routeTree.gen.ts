@@ -9,68 +9,208 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as IndexRouteImport } from './routes/index'
-import { Route as AboutIndexRouteImport } from './routes/about/index'
+import { Route as AppRouteRouteImport } from './routes/_app/route'
+import { Route as AppIndexRouteImport } from './routes/_app/index'
+import { Route as AuthLoginIndexRouteImport } from './routes/_auth/login/index'
+import { Route as AppSubmissionsIndexRouteImport } from './routes/_app/submissions/index'
+import { Route as AppPublishedManuscriptsIndexRouteImport } from './routes/_app/published-manuscripts/index'
+import { Route as AppProspectiveAuthorsIndexRouteImport } from './routes/_app/prospective-authors/index'
+import { Route as AppMyTeamIndexRouteImport } from './routes/_app/my-team/index'
+import { Route as AppMyTeamAddUserIndexRouteImport } from './routes/_app/my-team/add-user/index'
 
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+const AppRouteRoute = AppRouteRouteImport.update({
+  id: '/_app',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AboutIndexRoute = AboutIndexRouteImport.update({
-  id: '/about/',
-  path: '/about/',
+const AppIndexRoute = AppIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppRouteRoute,
+} as any)
+const AuthLoginIndexRoute = AuthLoginIndexRouteImport.update({
+  id: '/_auth/login/',
+  path: '/login/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AppSubmissionsIndexRoute = AppSubmissionsIndexRouteImport.update({
+  id: '/submissions/',
+  path: '/submissions/',
+  getParentRoute: () => AppRouteRoute,
+} as any)
+const AppPublishedManuscriptsIndexRoute =
+  AppPublishedManuscriptsIndexRouteImport.update({
+    id: '/published-manuscripts/',
+    path: '/published-manuscripts/',
+    getParentRoute: () => AppRouteRoute,
+  } as any)
+const AppProspectiveAuthorsIndexRoute =
+  AppProspectiveAuthorsIndexRouteImport.update({
+    id: '/prospective-authors/',
+    path: '/prospective-authors/',
+    getParentRoute: () => AppRouteRoute,
+  } as any)
+const AppMyTeamIndexRoute = AppMyTeamIndexRouteImport.update({
+  id: '/my-team/',
+  path: '/my-team/',
+  getParentRoute: () => AppRouteRoute,
+} as any)
+const AppMyTeamAddUserIndexRoute = AppMyTeamAddUserIndexRouteImport.update({
+  id: '/my-team/add-user/',
+  path: '/my-team/add-user/',
+  getParentRoute: () => AppRouteRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
-  '/about': typeof AboutIndexRoute
+  '/': typeof AppIndexRoute
+  '/my-team': typeof AppMyTeamIndexRoute
+  '/prospective-authors': typeof AppProspectiveAuthorsIndexRoute
+  '/published-manuscripts': typeof AppPublishedManuscriptsIndexRoute
+  '/submissions': typeof AppSubmissionsIndexRoute
+  '/login': typeof AuthLoginIndexRoute
+  '/my-team/add-user': typeof AppMyTeamAddUserIndexRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
-  '/about': typeof AboutIndexRoute
+  '/': typeof AppIndexRoute
+  '/my-team': typeof AppMyTeamIndexRoute
+  '/prospective-authors': typeof AppProspectiveAuthorsIndexRoute
+  '/published-manuscripts': typeof AppPublishedManuscriptsIndexRoute
+  '/submissions': typeof AppSubmissionsIndexRoute
+  '/login': typeof AuthLoginIndexRoute
+  '/my-team/add-user': typeof AppMyTeamAddUserIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
-  '/about/': typeof AboutIndexRoute
+  '/_app': typeof AppRouteRouteWithChildren
+  '/_app/': typeof AppIndexRoute
+  '/_app/my-team/': typeof AppMyTeamIndexRoute
+  '/_app/prospective-authors/': typeof AppProspectiveAuthorsIndexRoute
+  '/_app/published-manuscripts/': typeof AppPublishedManuscriptsIndexRoute
+  '/_app/submissions/': typeof AppSubmissionsIndexRoute
+  '/_auth/login/': typeof AuthLoginIndexRoute
+  '/_app/my-team/add-user/': typeof AppMyTeamAddUserIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/about'
+  fullPaths:
+    | '/'
+    | '/my-team'
+    | '/prospective-authors'
+    | '/published-manuscripts'
+    | '/submissions'
+    | '/login'
+    | '/my-team/add-user'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about'
-  id: '__root__' | '/' | '/about/'
+  to:
+    | '/'
+    | '/my-team'
+    | '/prospective-authors'
+    | '/published-manuscripts'
+    | '/submissions'
+    | '/login'
+    | '/my-team/add-user'
+  id:
+    | '__root__'
+    | '/_app'
+    | '/_app/'
+    | '/_app/my-team/'
+    | '/_app/prospective-authors/'
+    | '/_app/published-manuscripts/'
+    | '/_app/submissions/'
+    | '/_auth/login/'
+    | '/_app/my-team/add-user/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
-  AboutIndexRoute: typeof AboutIndexRoute
+  AppRouteRoute: typeof AppRouteRouteWithChildren
+  AuthLoginIndexRoute: typeof AuthLoginIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+    '/_app': {
+      id: '/_app'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof AppRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/about/': {
-      id: '/about/'
-      path: '/about'
-      fullPath: '/about'
-      preLoaderRoute: typeof AboutIndexRouteImport
+    '/_app/': {
+      id: '/_app/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof AppIndexRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
+    '/_auth/login/': {
+      id: '/_auth/login/'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof AuthLoginIndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_app/submissions/': {
+      id: '/_app/submissions/'
+      path: '/submissions'
+      fullPath: '/submissions'
+      preLoaderRoute: typeof AppSubmissionsIndexRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
+    '/_app/published-manuscripts/': {
+      id: '/_app/published-manuscripts/'
+      path: '/published-manuscripts'
+      fullPath: '/published-manuscripts'
+      preLoaderRoute: typeof AppPublishedManuscriptsIndexRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
+    '/_app/prospective-authors/': {
+      id: '/_app/prospective-authors/'
+      path: '/prospective-authors'
+      fullPath: '/prospective-authors'
+      preLoaderRoute: typeof AppProspectiveAuthorsIndexRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
+    '/_app/my-team/': {
+      id: '/_app/my-team/'
+      path: '/my-team'
+      fullPath: '/my-team'
+      preLoaderRoute: typeof AppMyTeamIndexRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
+    '/_app/my-team/add-user/': {
+      id: '/_app/my-team/add-user/'
+      path: '/my-team/add-user'
+      fullPath: '/my-team/add-user'
+      preLoaderRoute: typeof AppMyTeamAddUserIndexRouteImport
+      parentRoute: typeof AppRouteRoute
     }
   }
 }
 
+interface AppRouteRouteChildren {
+  AppIndexRoute: typeof AppIndexRoute
+  AppMyTeamIndexRoute: typeof AppMyTeamIndexRoute
+  AppProspectiveAuthorsIndexRoute: typeof AppProspectiveAuthorsIndexRoute
+  AppPublishedManuscriptsIndexRoute: typeof AppPublishedManuscriptsIndexRoute
+  AppSubmissionsIndexRoute: typeof AppSubmissionsIndexRoute
+  AppMyTeamAddUserIndexRoute: typeof AppMyTeamAddUserIndexRoute
+}
+
+const AppRouteRouteChildren: AppRouteRouteChildren = {
+  AppIndexRoute: AppIndexRoute,
+  AppMyTeamIndexRoute: AppMyTeamIndexRoute,
+  AppProspectiveAuthorsIndexRoute: AppProspectiveAuthorsIndexRoute,
+  AppPublishedManuscriptsIndexRoute: AppPublishedManuscriptsIndexRoute,
+  AppSubmissionsIndexRoute: AppSubmissionsIndexRoute,
+  AppMyTeamAddUserIndexRoute: AppMyTeamAddUserIndexRoute,
+}
+
+const AppRouteRouteWithChildren = AppRouteRoute._addFileChildren(
+  AppRouteRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
-  AboutIndexRoute: AboutIndexRoute,
+  AppRouteRoute: AppRouteRouteWithChildren,
+  AuthLoginIndexRoute: AuthLoginIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
