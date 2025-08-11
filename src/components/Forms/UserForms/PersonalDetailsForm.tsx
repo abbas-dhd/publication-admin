@@ -21,7 +21,7 @@ import { FileUploadServer } from "@/components/FileUploadServer";
 import type { UseFormReturn } from "react-hook-form";
 import type z from "zod";
 import type { PersonalDetailsSchema } from "./userFormSchema";
-import { DevTool } from "@hookform/devtools";
+// import { DevTool } from "@hookform/devtools";
 
 type PersonalDetailsFormProp = {
   form: UseFormReturn<z.infer<typeof PersonalDetailsSchema>>;
@@ -41,7 +41,7 @@ const PersonalDetailsForm = ({
 
   return (
     <div className="flex items-center justify-center">
-      <DevTool control={form.control} />
+      {/* <DevTool control={form.control} /> */}
       <div className="w-full max-w-[512px] ">
         <h3 className="text-base font-semibold mb-10">Personal Details</h3>
         <Form {...form}>

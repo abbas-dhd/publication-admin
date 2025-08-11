@@ -14,7 +14,7 @@ import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import type z from "zod";
@@ -38,7 +38,7 @@ function RouteComponent() {
     })
   );
 
-  console.log(error?.message);
+  console.log("error: ", error?.message);
   if (isLoading && !data) return <>LOADING!</>;
 
   return data && <EditForm data={data} />;
@@ -48,22 +48,7 @@ const EditForm = ({ data }: { data: UserDataWithId }) => {
   const form_1 = useForm<z.infer<typeof PersonalDetailsSchema>>({
     resolver: zodResolver(PersonalDetailsSchema),
     mode: "onChange",
-  });
-
-  const form_2 = useForm<z.infer<typeof InstitutionDetailsSchema>>({
-    resolver: zodResolver(InstitutionDetailsSchema),
-    mode: "onChange",
-  });
-
-  const form_3 = useForm<z.infer<typeof RefereeDetailsSchema>>({
-    resolver: zodResolver(RefereeDetailsSchema),
-
-    mode: "onChange",
-  });
-
-  useEffect(() => {
-    console.log("asd");
-    form_1.reset({
+    defaultValues: {
       role: data.role_name,
       email: data.email,
       name: data.name,
@@ -74,23 +59,32 @@ const EditForm = ({ data }: { data: UserDataWithId }) => {
       edu_qualification: data.education_qualification,
       preferred_review_subjects: data.preferred_subjects_for_review,
       qualification_cert: data.education_certificate,
-    });
-    form_2.reset({
+    },
+  });
+
+  const form_2 = useForm<z.infer<typeof InstitutionDetailsSchema>>({
+    resolver: zodResolver(InstitutionDetailsSchema),
+    mode: "onChange",
+    defaultValues: {
       alt_institution_phone: data?.institution_mobile,
       insitution_email: data?.institution_email,
       institution_address: data?.institution_postal_address,
       institution_name: data?.institution_name,
       institution_phone: data?.institution_mobile,
-    });
+    },
+  });
 
-    form_3.reset({
+  const form_3 = useForm<z.infer<typeof RefereeDetailsSchema>>({
+    resolver: zodResolver(RefereeDetailsSchema),
+    mode: "onChange",
+    defaultValues: {
       alt_referee_phone: data?.referee_mobile,
       referee_address: data?.referee_postal_address,
       referee_email: data?.referee_email,
       referee_name: data?.referee_name,
       referee_phone: data?.referee_mobile,
-    });
-  }, []);
+    },
+  });
 
   const [currentTab, setCurrentTab] = useState<keyof typeof formTabs>(1);
   const [invalidTabs, setInvalidTabs] = useState<number[]>([]);
@@ -206,7 +200,7 @@ const EditForm = ({ data }: { data: UserDataWithId }) => {
                   const personalDetails = form_1.getValues();
                   const institutionDetails = form_2.getValues();
                   const refereeDetails = form_3.getValues();
-                  console.log(data, "id");
+
                   const userData: UserDataWithId = {
                     user_id: data.user_id,
                     role_name: personalDetails.role,
