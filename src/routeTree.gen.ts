@@ -17,6 +17,7 @@ import { Route as AppPublishedManuscriptsIndexRouteImport } from './routes/_app/
 import { Route as AppProspectiveAuthorsIndexRouteImport } from './routes/_app/prospective-authors/index'
 import { Route as AppMyTeamIndexRouteImport } from './routes/_app/my-team/index'
 import { Route as AppMyTeamAddUserIndexRouteImport } from './routes/_app/my-team/add-user/index'
+import { Route as AppMyTeamEditUserRoleIdRouteImport } from './routes/_app/my-team/edit-user.$role.$id'
 
 const AppRouteRoute = AppRouteRouteImport.update({
   id: '/_app',
@@ -59,6 +60,11 @@ const AppMyTeamAddUserIndexRoute = AppMyTeamAddUserIndexRouteImport.update({
   path: '/my-team/add-user/',
   getParentRoute: () => AppRouteRoute,
 } as any)
+const AppMyTeamEditUserRoleIdRoute = AppMyTeamEditUserRoleIdRouteImport.update({
+  id: '/my-team/edit-user/$role/$id',
+  path: '/my-team/edit-user/$role/$id',
+  getParentRoute: () => AppRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof AppIndexRoute
@@ -68,6 +74,7 @@ export interface FileRoutesByFullPath {
   '/submissions': typeof AppSubmissionsIndexRoute
   '/login': typeof AuthLoginIndexRoute
   '/my-team/add-user': typeof AppMyTeamAddUserIndexRoute
+  '/my-team/edit-user/$role/$id': typeof AppMyTeamEditUserRoleIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof AppIndexRoute
@@ -77,6 +84,7 @@ export interface FileRoutesByTo {
   '/submissions': typeof AppSubmissionsIndexRoute
   '/login': typeof AuthLoginIndexRoute
   '/my-team/add-user': typeof AppMyTeamAddUserIndexRoute
+  '/my-team/edit-user/$role/$id': typeof AppMyTeamEditUserRoleIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -88,6 +96,7 @@ export interface FileRoutesById {
   '/_app/submissions/': typeof AppSubmissionsIndexRoute
   '/_auth/login/': typeof AuthLoginIndexRoute
   '/_app/my-team/add-user/': typeof AppMyTeamAddUserIndexRoute
+  '/_app/my-team/edit-user/$role/$id': typeof AppMyTeamEditUserRoleIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -99,6 +108,7 @@ export interface FileRouteTypes {
     | '/submissions'
     | '/login'
     | '/my-team/add-user'
+    | '/my-team/edit-user/$role/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -108,6 +118,7 @@ export interface FileRouteTypes {
     | '/submissions'
     | '/login'
     | '/my-team/add-user'
+    | '/my-team/edit-user/$role/$id'
   id:
     | '__root__'
     | '/_app'
@@ -118,6 +129,7 @@ export interface FileRouteTypes {
     | '/_app/submissions/'
     | '/_auth/login/'
     | '/_app/my-team/add-user/'
+    | '/_app/my-team/edit-user/$role/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -183,6 +195,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppMyTeamAddUserIndexRouteImport
       parentRoute: typeof AppRouteRoute
     }
+    '/_app/my-team/edit-user/$role/$id': {
+      id: '/_app/my-team/edit-user/$role/$id'
+      path: '/my-team/edit-user/$role/$id'
+      fullPath: '/my-team/edit-user/$role/$id'
+      preLoaderRoute: typeof AppMyTeamEditUserRoleIdRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
   }
 }
 
@@ -193,6 +212,7 @@ interface AppRouteRouteChildren {
   AppPublishedManuscriptsIndexRoute: typeof AppPublishedManuscriptsIndexRoute
   AppSubmissionsIndexRoute: typeof AppSubmissionsIndexRoute
   AppMyTeamAddUserIndexRoute: typeof AppMyTeamAddUserIndexRoute
+  AppMyTeamEditUserRoleIdRoute: typeof AppMyTeamEditUserRoleIdRoute
 }
 
 const AppRouteRouteChildren: AppRouteRouteChildren = {
@@ -202,6 +222,7 @@ const AppRouteRouteChildren: AppRouteRouteChildren = {
   AppPublishedManuscriptsIndexRoute: AppPublishedManuscriptsIndexRoute,
   AppSubmissionsIndexRoute: AppSubmissionsIndexRoute,
   AppMyTeamAddUserIndexRoute: AppMyTeamAddUserIndexRoute,
+  AppMyTeamEditUserRoleIdRoute: AppMyTeamEditUserRoleIdRoute,
 }
 
 const AppRouteRouteWithChildren = AppRouteRoute._addFileChildren(

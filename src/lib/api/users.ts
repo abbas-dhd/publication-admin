@@ -59,12 +59,13 @@ export const addUser = async <TResponse = NewUserDataRespnse>(
 
   return response.json();
 };
+
 type AllUsersData = {
   message: string;
   data: {
-    editors: UserData[];
-    review_coordinators: UserData[];
-    reviewers: UserData[];
+    editors: UserDataWithId[];
+    review_coordinators: UserDataWithId[];
+    reviewers: UserDataWithId[];
   };
 };
 
@@ -87,4 +88,62 @@ export const getAllUsers = async <
   }
 
   return response.json();
+};
+
+export type UserDataWithId = UserData & { user_id: string };
+
+export const editUser = async <TResponse = NewUserDataRespnse>(
+  data: UserDataWithId
+): Promise<TResponse> => {
+  const { token } = JSON.parse(localStorage.getItem("authUser") || "");
+
+  const url = new URL(`${SERVER_API}/api/myteam/update/`);
+  url.searchParams.append("user_id", data.user_id);
+  url.searchParams.append("role_name", data.role_name);
+
+  const response = await fetch(url.toString(), {
+    method: "PUT",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "content-type": "application/json",
+    },
+    body: JSON.stringify(data),
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.message || "Authentication failed");
+  }
+
+  return response.json();
+};
+
+export const getUser = async <TResponse = UserDataWithId>({
+  id,
+  role,
+}: {
+  id: string;
+  role: string;
+}): Promise<TResponse> => {
+  const { token } = JSON.parse(localStorage.getItem("authUser") || "");
+
+  const url = new URL(`${SERVER_API}/api/myteam/get/`);
+  url.searchParams.append("user_id", id);
+  url.searchParams.append("role_name", role);
+
+  const response = await fetch(url.toString(), {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "content-type": "application/json",
+    },
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.message || "Authentication failed");
+  }
+  const data = await response.json();
+
+  return data.data;
 };

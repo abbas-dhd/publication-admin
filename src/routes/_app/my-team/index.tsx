@@ -1,6 +1,6 @@
 import { DataTable } from "@/components/CustomTable";
 import { Button } from "@/components/ui/button";
-import type { UserData, UserFile } from "@/lib/api/users";
+import type { UserDataWithId } from "@/lib/api/users";
 import { allUsersQueryOptions } from "@/lib/query_and_mutations/user/useGetAllUsers";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
@@ -23,6 +23,7 @@ function RouteComponent() {
   const [activeRole, setCurrentActiveRole] = useState<UserRole>("editor");
 
   const { data, isLoading, error } = useQuery(allUsersQueryOptions());
+  const navigate = Route.useNavigate();
 
   const editor = data?.data.editors || [];
   const reviewCoordinator = data?.data.review_coordinators || [];
@@ -44,7 +45,7 @@ function RouteComponent() {
     { role: "reviewer", count: reviewers.length, text: "Reviewer" },
   ];
 
-  const columns: ColumnDef<UserData>[] = [
+  const columns: ColumnDef<UserDataWithId>[] = [
     {
       accessorKey: "role_name",
       header: getRoleName(activeRole),
@@ -54,9 +55,7 @@ function RouteComponent() {
         const userName = row.original.name;
         const email = row.original.email;
         const profile_photo = row.original.profile_photo;
-        const pic = JSON.parse(profile_photo as unknown as string) as UserFile;
-
-        console.log(pic);
+        const pic = profile_photo;
 
         return (
           <div className="flex flex-col">
@@ -89,11 +88,22 @@ function RouteComponent() {
     {
       accessorKey: "action",
       header: () => <div className="text-center">Action</div>,
-      cell: () => {
+      cell: ({ row }) => {
         return (
           <div className=" ml-auto text-center font-medium flex gap-4 justify-center">
             <Eye className="cursor-pointer" />
-            <Pencil className="cursor-pointer" />
+            <Pencil
+              className="cursor-pointer"
+              onClick={() => {
+                navigate({
+                  to: "/my-team/edit-user/$role/$id",
+                  params: {
+                    id: row.original.user_id,
+                    role: row.original.role_name,
+                  },
+                });
+              }}
+            />
           </div>
         );
       },
@@ -123,7 +133,6 @@ function RouteComponent() {
         <Link
           className="cursor-pointer flex bg-primary rounded-lg py-2 px-4 text-primary-foreground text-sm items-center gap-2"
           to={"/my-team/add-user"}
-          search={{ mode: "add" }}
         >
           <PlusIcon /> Add User
         </Link>
