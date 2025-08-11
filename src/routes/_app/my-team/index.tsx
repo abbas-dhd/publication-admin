@@ -41,7 +41,7 @@ function RouteComponent() {
       count: reviewCoordinator.length,
       text: "Review Coordinators",
     },
-    { role: "reviewer", count: reviewCoordinator.length, text: "Reviewer" },
+    { role: "reviewer", count: reviewers.length, text: "Reviewer" },
   ];
 
   const columns: ColumnDef<UserData>[] = [
@@ -60,7 +60,7 @@ function RouteComponent() {
 
         return (
           <div className="flex flex-col">
-            <img src={pic.url} alt="" />
+            <img src={pic.url} alt="" className="h-10 w-10 object-cover" />
             <span className="text-sm">{userName}</span>
             <span className="text-xs text-muted-foreground">{email}</span>
           </div>

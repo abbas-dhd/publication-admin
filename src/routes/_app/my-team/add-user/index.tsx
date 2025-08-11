@@ -298,7 +298,7 @@ const PersonalDetailsForm = ({ form, onSubmit }: PersonalDetailsFormProp) => {
                     </FormControl>
                     <SelectContent>
                       <SelectItem value="editor">Editor</SelectItem>
-                      <SelectItem value="reviewer ">Reviewer</SelectItem>
+                      <SelectItem value="reviewer">Reviewer</SelectItem>
                       <SelectItem value="review_coordinator">
                         Review Coordinator
                       </SelectItem>
