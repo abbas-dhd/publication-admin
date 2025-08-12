@@ -6,7 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import type { ColumnDef } from "@tanstack/react-table";
 import { Eye, Pencil, PlusIcon } from "lucide-react";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 export const Route = createFileRoute("/_app/my-team/")({
   component: RouteComponent,
@@ -45,70 +45,77 @@ function RouteComponent() {
     { role: "reviewer", count: reviewers.length, text: "Reviewer" },
   ];
 
-  const columns: ColumnDef<UserDataWithId>[] = [
-    {
-      accessorKey: "role_name",
-      header: getRoleName(activeRole),
-      size: 1,
-      maxSize: 1,
-      cell: ({ row }) => {
-        const userName = row.original.name;
-        const email = row.original.email;
-        const profile_photo = row.original.profile_photo;
-        const pic = profile_photo;
+  const columns: ColumnDef<UserDataWithId>[] = useMemo(
+    () => [
+      {
+        accessorKey: "role_name",
+        header: getRoleName(activeRole),
+        size: 1,
+        maxSize: 1,
+        cell: ({ row }) => {
+          const userName = row.original.name;
+          const email = row.original.email;
+          const profile_photo = row.original.profile_photo;
+          const pic = profile_photo;
 
-        return (
-          <div className="flex flex-col">
-            <img src={pic.url} alt="" className="h-10 w-10 object-cover" />
-            <span className="text-sm">{userName}</span>
-            <span className="text-xs text-muted-foreground">{email}</span>
-          </div>
-        );
+          return (
+            <div className="flex flex-col">
+              <img
+                src={pic.url}
+                alt={row.original.name}
+                className="h-10 w-10 object-cover"
+              />
+              <span className="text-sm">{userName}</span>
+              <span className="text-xs text-muted-foreground">{email}</span>
+            </div>
+          );
+        },
       },
-    },
-    {
-      accessorKey: "manuscript",
-      header: "Manuscripts",
-      cell: () => {
-        return (
-          <p className="flex flex-col justify-start items-start">
-            <span>0 in Progress</span>
-            <span className="">0 Published</span>
-          </p>
-        );
+      {
+        accessorKey: "manuscript",
+        header: "Manuscripts",
+        cell: () => {
+          return (
+            <p className="flex flex-col justify-start items-start">
+              <span>0 in Progress</span>
+              <span className="">0 Published</span>
+            </p>
+          );
+        },
       },
-    },
-    {
-      accessorKey: "mobile",
-      header: () => <div className="text-center">Contact</div>,
-      cell: ({ row }) => {
-        return <p className="text-center">+91 {row.original.mobile}</p>;
+      {
+        accessorKey: "mobile",
+        header: () => <div className="text-center">Contact</div>,
+        cell: ({ row }) => {
+          return <p className="text-center">+91 {row.original.mobile}</p>;
+        },
       },
-    },
-    {
-      accessorKey: "action",
-      header: () => <div className="text-center">Action</div>,
-      cell: ({ row }) => {
-        return (
-          <div className=" ml-auto text-center font-medium flex gap-4 justify-center">
-            <Eye className="cursor-pointer" />
-            <Pencil
-              className="cursor-pointer"
-              onClick={() => {
-                navigate({
-                  to: "/my-team/edit-user/$role/$id",
-                  params: {
-                    id: row.original.user_id,
-                    role: row.original.role_name,
-                  },
-                });
-              }}
-            />
-          </div>
-        );
+      {
+        accessorKey: "action",
+        header: () => <div className="text-center">Action</div>,
+        cell: ({ row }) => {
+          return (
+            <div className=" ml-auto text-center font-medium flex gap-4 justify-center">
+              <Eye className="cursor-pointer" />
+              <Pencil
+                className="cursor-pointer"
+                onClick={() => {
+                  navigate({
+                    to: "/my-team/edit-user/$role/$id",
+                    params: {
+                      id: row.original.user_id,
+                      role: row.original.role_name,
+                    },
+                  });
+                }}
+              />
+            </div>
+          );
+        },
       },
-    },
-  ];
+    ],
+    [activeRole, navigate]
+  );
 
   return (
     <div>

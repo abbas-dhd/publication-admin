@@ -9,9 +9,12 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as AuthorRouteRouteImport } from './routes/_author/route'
 import { Route as AppRouteRouteImport } from './routes/_app/route'
 import { Route as AppIndexRouteImport } from './routes/_app/index'
+import { Route as AuthorAuthorIndexRouteImport } from './routes/_author/author/index'
 import { Route as AuthLoginIndexRouteImport } from './routes/_auth/login/index'
+import { Route as AuthAuthorLoginIndexRouteImport } from './routes/_auth/author-login/index'
 import { Route as AppSubmissionsIndexRouteImport } from './routes/_app/submissions/index'
 import { Route as AppPublishedManuscriptsIndexRouteImport } from './routes/_app/published-manuscripts/index'
 import { Route as AppProspectiveAuthorsIndexRouteImport } from './routes/_app/prospective-authors/index'
@@ -19,6 +22,10 @@ import { Route as AppMyTeamIndexRouteImport } from './routes/_app/my-team/index'
 import { Route as AppMyTeamAddUserIndexRouteImport } from './routes/_app/my-team/add-user/index'
 import { Route as AppMyTeamEditUserRoleIdRouteImport } from './routes/_app/my-team/edit-user.$role.$id'
 
+const AuthorRouteRoute = AuthorRouteRouteImport.update({
+  id: '/_author',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AppRouteRoute = AppRouteRouteImport.update({
   id: '/_app',
   getParentRoute: () => rootRouteImport,
@@ -28,9 +35,19 @@ const AppIndexRoute = AppIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AppRouteRoute,
 } as any)
+const AuthorAuthorIndexRoute = AuthorAuthorIndexRouteImport.update({
+  id: '/author/',
+  path: '/author/',
+  getParentRoute: () => AuthorRouteRoute,
+} as any)
 const AuthLoginIndexRoute = AuthLoginIndexRouteImport.update({
   id: '/_auth/login/',
   path: '/login/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthAuthorLoginIndexRoute = AuthAuthorLoginIndexRouteImport.update({
+  id: '/_auth/author-login/',
+  path: '/author-login/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AppSubmissionsIndexRoute = AppSubmissionsIndexRouteImport.update({
@@ -72,7 +89,9 @@ export interface FileRoutesByFullPath {
   '/prospective-authors': typeof AppProspectiveAuthorsIndexRoute
   '/published-manuscripts': typeof AppPublishedManuscriptsIndexRoute
   '/submissions': typeof AppSubmissionsIndexRoute
+  '/author-login': typeof AuthAuthorLoginIndexRoute
   '/login': typeof AuthLoginIndexRoute
+  '/author': typeof AuthorAuthorIndexRoute
   '/my-team/add-user': typeof AppMyTeamAddUserIndexRoute
   '/my-team/edit-user/$role/$id': typeof AppMyTeamEditUserRoleIdRoute
 }
@@ -82,19 +101,24 @@ export interface FileRoutesByTo {
   '/prospective-authors': typeof AppProspectiveAuthorsIndexRoute
   '/published-manuscripts': typeof AppPublishedManuscriptsIndexRoute
   '/submissions': typeof AppSubmissionsIndexRoute
+  '/author-login': typeof AuthAuthorLoginIndexRoute
   '/login': typeof AuthLoginIndexRoute
+  '/author': typeof AuthorAuthorIndexRoute
   '/my-team/add-user': typeof AppMyTeamAddUserIndexRoute
   '/my-team/edit-user/$role/$id': typeof AppMyTeamEditUserRoleIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_app': typeof AppRouteRouteWithChildren
+  '/_author': typeof AuthorRouteRouteWithChildren
   '/_app/': typeof AppIndexRoute
   '/_app/my-team/': typeof AppMyTeamIndexRoute
   '/_app/prospective-authors/': typeof AppProspectiveAuthorsIndexRoute
   '/_app/published-manuscripts/': typeof AppPublishedManuscriptsIndexRoute
   '/_app/submissions/': typeof AppSubmissionsIndexRoute
+  '/_auth/author-login/': typeof AuthAuthorLoginIndexRoute
   '/_auth/login/': typeof AuthLoginIndexRoute
+  '/_author/author/': typeof AuthorAuthorIndexRoute
   '/_app/my-team/add-user/': typeof AppMyTeamAddUserIndexRoute
   '/_app/my-team/edit-user/$role/$id': typeof AppMyTeamEditUserRoleIdRoute
 }
@@ -106,7 +130,9 @@ export interface FileRouteTypes {
     | '/prospective-authors'
     | '/published-manuscripts'
     | '/submissions'
+    | '/author-login'
     | '/login'
+    | '/author'
     | '/my-team/add-user'
     | '/my-team/edit-user/$role/$id'
   fileRoutesByTo: FileRoutesByTo
@@ -116,29 +142,43 @@ export interface FileRouteTypes {
     | '/prospective-authors'
     | '/published-manuscripts'
     | '/submissions'
+    | '/author-login'
     | '/login'
+    | '/author'
     | '/my-team/add-user'
     | '/my-team/edit-user/$role/$id'
   id:
     | '__root__'
     | '/_app'
+    | '/_author'
     | '/_app/'
     | '/_app/my-team/'
     | '/_app/prospective-authors/'
     | '/_app/published-manuscripts/'
     | '/_app/submissions/'
+    | '/_auth/author-login/'
     | '/_auth/login/'
+    | '/_author/author/'
     | '/_app/my-team/add-user/'
     | '/_app/my-team/edit-user/$role/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   AppRouteRoute: typeof AppRouteRouteWithChildren
+  AuthorRouteRoute: typeof AuthorRouteRouteWithChildren
+  AuthAuthorLoginIndexRoute: typeof AuthAuthorLoginIndexRoute
   AuthLoginIndexRoute: typeof AuthLoginIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/_author': {
+      id: '/_author'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof AuthorRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_app': {
       id: '/_app'
       path: ''
@@ -153,11 +193,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppIndexRouteImport
       parentRoute: typeof AppRouteRoute
     }
+    '/_author/author/': {
+      id: '/_author/author/'
+      path: '/author'
+      fullPath: '/author'
+      preLoaderRoute: typeof AuthorAuthorIndexRouteImport
+      parentRoute: typeof AuthorRouteRoute
+    }
     '/_auth/login/': {
       id: '/_auth/login/'
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof AuthLoginIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_auth/author-login/': {
+      id: '/_auth/author-login/'
+      path: '/author-login'
+      fullPath: '/author-login'
+      preLoaderRoute: typeof AuthAuthorLoginIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_app/submissions/': {
@@ -229,8 +283,22 @@ const AppRouteRouteWithChildren = AppRouteRoute._addFileChildren(
   AppRouteRouteChildren,
 )
 
+interface AuthorRouteRouteChildren {
+  AuthorAuthorIndexRoute: typeof AuthorAuthorIndexRoute
+}
+
+const AuthorRouteRouteChildren: AuthorRouteRouteChildren = {
+  AuthorAuthorIndexRoute: AuthorAuthorIndexRoute,
+}
+
+const AuthorRouteRouteWithChildren = AuthorRouteRoute._addFileChildren(
+  AuthorRouteRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   AppRouteRoute: AppRouteRouteWithChildren,
+  AuthorRouteRoute: AuthorRouteRouteWithChildren,
+  AuthAuthorLoginIndexRoute: AuthAuthorLoginIndexRoute,
   AuthLoginIndexRoute: AuthLoginIndexRoute,
 }
 export const routeTree = rootRouteImport

@@ -1,28 +1,17 @@
 import { AppSidebar, type SidebarLinks } from "@/components/ui/app-sidebar";
 import { useAuthContext } from "@/context/AuthContext";
-import { createFileRoute, Outlet, useNavigate } from "@tanstack/react-router";
-import { Home } from "lucide-react";
+import { createFileRoute, Outlet } from "@tanstack/react-router";
 import { useEffect } from "react";
 
-export const Route = createFileRoute("/_app")({
+export const Route = createFileRoute("/_author")({
   component: RouteComponent,
-  beforeLoad: async ({ context }) => {
-    console.log(context, "hahaha");
-
-    const { auth } = context;
-    if (auth && auth.isAuthenticated()) {
-      console.log("Looks good");
-    } else {
-      console.log("something is wrong");
-    }
-
-    // TODO: FIX AUTH CONTEXT ON BEFORE LOAD
-  },
 });
 
 function RouteComponent() {
+  const navigate = Route.useNavigate();
   const authContext = useAuthContext();
-  const navigate = useNavigate();
+
+  // TODO: Add check to only show this if author is logged in
 
   useEffect(() => {
     if (authContext.user === null) {
@@ -30,8 +19,7 @@ function RouteComponent() {
         to: "/login",
       });
     }
-  }, [authContext.user, navigate]);
-
+  });
   return (
     <>
       <AppSidebar links={items} />
@@ -60,24 +48,7 @@ const items: SidebarLinks[] = [
   {
     title: "Home",
     url: {
-      to: "/",
+      to: "/author",
     },
-    icon: Home,
-  },
-  {
-    title: "My Team",
-    url: { to: "/my-team" },
-  },
-  {
-    title: "Submissions",
-    url: { to: "/submissions" },
-  },
-  {
-    title: "Prospective Authos",
-    url: { to: "/prospective-authors" },
-  },
-  {
-    title: "Published Manuscripts",
-    url: { to: "/published-manuscripts" },
   },
 ];

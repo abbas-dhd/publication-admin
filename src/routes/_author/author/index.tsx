@@ -5,7 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import type { ColumnDef } from "@tanstack/react-table";
 
-export const Route = createFileRoute("/_app/submissions/")({
+export const Route = createFileRoute("/_author/author/")({
   component: RouteComponent,
 });
 

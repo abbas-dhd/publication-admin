@@ -12,10 +12,12 @@ import {
 import { Link, type ValidateLinkOptions } from "@tanstack/react-router";
 import OPUS_JURIS_ICON from "@/assets/opus_juris_logo_icon.png";
 import OPUS_JURIS_TEXT from "@/assets/opus_juris_logo_text.png";
-import { Home } from "lucide-react";
 import { twMerge } from "tailwind-merge";
 
-export function AppSidebar() {
+type AppSidebarProps = {
+  links: SidebarLinks[];
+};
+export function AppSidebar({ links }: AppSidebarProps) {
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader className="p-0">
@@ -23,7 +25,7 @@ export function AppSidebar() {
       </SidebarHeader>
       <SidebarContent className=" p-2">
         <SidebarMenu>
-          {items.map((item) => (
+          {links.map((item) => (
             <SidebarMenuItem key={item.title}>
               <SidebarMenuButton asChild>
                 <Link
@@ -49,37 +51,11 @@ export function AppSidebar() {
 
 // Menu items.
 
-type SidebarLinks = {
+export type SidebarLinks = {
   title: string;
   url: ValidateLinkOptions;
   icon?: React.ComponentType<React.SVGProps<SVGSVGElement>>;
 };
-
-const items: SidebarLinks[] = [
-  {
-    title: "Home",
-    url: {
-      to: "/",
-    },
-    icon: Home,
-  },
-  {
-    title: "My Team",
-    url: { to: "/my-team" },
-  },
-  {
-    title: "Submissions",
-    url: { to: "/submissions" },
-  },
-  {
-    title: "Prospective Authos",
-    url: { to: "/prospective-authors" },
-  },
-  {
-    title: "Published Manuscripts",
-    url: { to: "/published-manuscripts" },
-  },
-];
 
 const SidebarHeaderContent = () => {
   const sidebar = useSidebar();
