@@ -59,3 +59,33 @@ export const getAllSubmission = async <
 
   return response.json();
 };
+
+export const getSubmissionById = async <
+  TResponse = { data: SubmissionData; message: string },
+>(data: {
+  id: string;
+  roleName: string;
+}): Promise<TResponse> => {
+  const { token } = JSON.parse(localStorage.getItem("authUser") || "");
+
+  const { id, roleName } = data;
+
+  const url = new URL(`${SERVER_API}/api/submission/get/`);
+  url.searchParams.append("user_id", id);
+  url.searchParams.append("role_name", roleName);
+
+  const response = await fetch(url.toString(), {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "content-type": "application/json",
+    },
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.message || "Authentication failed");
+  }
+
+  return response.json();
+};

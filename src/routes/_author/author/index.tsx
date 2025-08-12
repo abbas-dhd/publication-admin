@@ -1,16 +1,36 @@
 import { DataTable } from "@/components/CustomTable";
-import type { SubmissionData } from "@/lib/api/submissions";
-import { allSubmissionOptions } from "@/lib/query_and_mutations/submission/getAllSubmissions";
+import { useAuthContext } from "@/context/AuthContext";
+import { type SubmissionData } from "@/lib/api/submissions";
+
+import { getSubmissionByIdOptions } from "@/lib/query_and_mutations/submission/getSubmissionsbyId";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import type { ColumnDef } from "@tanstack/react-table";
+import { jwtDecode } from "jwt-decode";
 
 export const Route = createFileRoute("/_author/author/")({
   component: RouteComponent,
 });
 
+type JWTPayload = {
+  user_id: string;
+  role_name: string;
+  exp: number;
+};
+
 function RouteComponent() {
-  const { data, isLoading, error } = useQuery(allSubmissionOptions());
+  const authContext = useAuthContext();
+  const token = authContext.user?.token || "";
+
+  const decoded = jwtDecode<JWTPayload>(token);
+  const { user_id, role_name } = decoded;
+
+  const { data, isLoading, error } = useQuery(
+    getSubmissionByIdOptions({
+      id: user_id,
+      roleName: role_name,
+    })
+  );
 
   if (!data) return <p>No Data</p>;
   if (isLoading) return <p>Loading...</p>;
@@ -20,7 +40,7 @@ function RouteComponent() {
     <div>
       <strong>Submission</strong>
       <div className="mt-4">
-        <DataTable columns={columns} data={data.data} />
+        <DataTable columns={columns} data={[data.data]} />
       </div>
     </div>
   );
