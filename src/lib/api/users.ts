@@ -25,8 +25,8 @@ export type UserData = {
   institution_email?: string;
   institution_postal_address: string;
   // Referr details
-  referee_name: string;
-  referee_mobile: string;
+  referee_name?: string;
+  referee_mobile?: string;
   referee_alternate_mobile?: string;
   referee_email?: string;
   referee_postal_address?: string;
