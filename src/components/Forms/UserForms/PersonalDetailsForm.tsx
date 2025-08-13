@@ -34,9 +34,28 @@ const PersonalDetailsForm = ({
   showButtons = true,
 }: PersonalDetailsFormProp) => {
   const preferredOptions = [
-    { value: "law", label: "Law" },
-    { value: "legal", label: "Legal" },
-    { value: "Litigation", label: "Litigation" },
+    { value: "criminal_law", label: "Criminal Law" },
+    { value: "civil_law", label: "Civil Law" },
+    { value: "corporate_law", label: "Corporate Law" },
+    { value: "constitutional_law", label: "Constitutional Law" },
+    { value: "contract_law", label: "Contract Law" },
+    { value: "family_law", label: "Family Law" },
+    { value: "property_law", label: "Property Law" },
+    { value: "environment_law", label: "Environment Law" },
+    { value: "administrative_law", label: "Administrative Law" },
+    { value: "labour_law", label: "Labour Law" },
+    { value: "cyber_law", label: "Cyber Law" },
+    {
+      value: "law_general_science_medicine",
+      label: "Law of General Science and Medicine",
+    },
+    { value: "tax_commerce_law", label: "Law Related to Tax & Commerce" },
+    { value: "international_law", label: "International Law" },
+    { value: "space_law", label: "Space Law" },
+    { value: "all_of_the_above", label: "All of the Above" },
+    { value: "criminal_law", label: "Criminal Law" },
+    { value: "civil_law", label: "Civil Law" },
+    { value: "corporate_law", label: "Corporate Law" },
   ];
 
   return (
@@ -110,7 +129,7 @@ const PersonalDetailsForm = ({
               name="alt_phone"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Alternate Phone*</FormLabel>
+                  <FormLabel>Alternate Phone</FormLabel>
                   <FormControl>
                     <Input placeholder="10 digit phone number" {...field} />
                   </FormControl>
@@ -184,7 +203,7 @@ const PersonalDetailsForm = ({
                 // console.log("render func", field.field.value);
                 return (
                   <FormItem>
-                    <FormLabel>Upload Qualification Certificates*</FormLabel>
+                    <FormLabel>Upload Qualification Certificates</FormLabel>
                     <FormControl>
                       <FileUploadServer
                         control={form.control}

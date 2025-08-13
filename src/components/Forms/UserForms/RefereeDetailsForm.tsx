@@ -46,7 +46,7 @@ const RefereeDetailsForm = ({
               name="referee_name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Name of Referee*</FormLabel>
+                  <FormLabel>Name of Referee</FormLabel>
                   <FormControl>
                     <Input placeholder="Enter full name" {...field} />
                   </FormControl>
@@ -59,7 +59,7 @@ const RefereeDetailsForm = ({
               name="referee_phone"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Phone of Referee*</FormLabel>
+                  <FormLabel>Phone of Referee</FormLabel>
                   <FormControl>
                     <Input placeholder="10 digit phone number" {...field} />
                   </FormControl>
@@ -72,7 +72,7 @@ const RefereeDetailsForm = ({
               name="alt_referee_phone"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Alternate Phone of Referee*</FormLabel>
+                  <FormLabel>Alternate Phone of Referee</FormLabel>
                   <FormControl>
                     <Input placeholder="10 digit phone number" {...field} />
                   </FormControl>
@@ -98,7 +98,7 @@ const RefereeDetailsForm = ({
               name="referee_address"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Postal Address of Referee*</FormLabel>
+                  <FormLabel>Postal Address of Referee</FormLabel>
                   <FormControl>
                     <Textarea placeholder="Enter your address" {...field} />
                   </FormControl>

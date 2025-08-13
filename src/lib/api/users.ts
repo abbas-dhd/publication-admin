@@ -20,18 +20,18 @@ export type UserData = {
   preferred_subjects_for_review: string[];
   // Institution details
   institution_name: string;
-  institution_mobile: string;
+  institution_mobile?: string;
   institution_alternate_mobile?: string;
-  institution_email: string;
+  institution_email?: string;
   institution_postal_address: string;
   // Referr details
   referee_name: string;
   referee_mobile: string;
   referee_alternate_mobile?: string;
-  referee_email: string;
-  referee_postal_address: string;
+  referee_email?: string;
+  referee_postal_address?: string;
   profile_photo: UserFile;
-  education_certificate: UserFile;
+  education_certificate?: UserFile;
 };
 export type NewUserDataRespnse = {
   data: unknown;

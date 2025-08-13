@@ -54,7 +54,7 @@ const InstitutionDetailsForm = ({
               name="institution_phone"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Phone of Institution*</FormLabel>
+                  <FormLabel>Phone of Institution</FormLabel>
                   <FormControl>
                     <Input placeholder="10 digit phone number" {...field} />
                   </FormControl>
@@ -67,7 +67,7 @@ const InstitutionDetailsForm = ({
               name="alt_institution_phone"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Alternate Phone of Institution*</FormLabel>
+                  <FormLabel>Alternate Phone of Institution</FormLabel>
                   <FormControl>
                     <Input placeholder="10 digit phone number" {...field} />
                   </FormControl>
