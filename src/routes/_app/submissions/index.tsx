@@ -59,7 +59,9 @@ const columns: ColumnDef<SubmissionData>[] = [
   {
     accessorKey: "author",
     header: () => <span className="px-[2rem]">Status</span>,
-    cell: () => <span className="px-[2rem]">Yet to Assign</span>,
+    cell: ({ row }) => (
+      <span className="px-[2rem]">{row.original.submission.status}</span>
+    ),
   },
   {
     accessorKey: "author",

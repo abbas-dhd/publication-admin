@@ -18,6 +18,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { useQuery } from "@tanstack/react-query";
 import { getSubmissionByIdOptions } from "@/lib/query_and_mutations/submission/getSubmissionsbyId";
+import { getSubmissionActionOptions } from "@/lib/query_and_mutations/submission/getSubmissionAction";
 
 export const Route = createFileRoute("/_app/submissions/$id/")({
   component: RouteComponent,
@@ -34,6 +35,18 @@ function RouteComponent() {
       submission_id: id,
     })
   );
+
+  const {
+    data: actionData,
+    // isLoading: action_isLoading,
+    // error: action_error,
+  } = useQuery(
+    getSubmissionActionOptions({
+      submission_id: id,
+    })
+  );
+
+  console.log("action Data", actionData);
 
   console.log("error: ", error?.message);
   if (isLoading && !data) return <>LOADING!</>;

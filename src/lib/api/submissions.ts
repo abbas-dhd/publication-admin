@@ -21,9 +21,9 @@ type Submission = {
 
 type Manuscript = {
   id: number;
-  file: UserFile; // JSON string containing { url: string; name: string }
+  file: UserFile;
   comments: string | null;
-  checklist: string | null;
+  // checklist: string | null;
   submission_id: number;
   created_at: number;
   updated_at: number;
