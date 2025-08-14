@@ -16,13 +16,31 @@ import {
 } from "@/components/ui/accordion";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
+import { useQuery } from "@tanstack/react-query";
+import { getSubmissionByIdOptions } from "@/lib/query_and_mutations/submission/getSubmissionsbyId";
 
 export const Route = createFileRoute("/_app/submissions/$id/")({
   component: RouteComponent,
+  loader: ({ params }) => ({
+    crumb: params.id,
+  }),
 });
 
 function RouteComponent() {
   const navigate = Route.useNavigate();
+  const { id } = Route.useParams();
+  const { data, isLoading, error } = useQuery(
+    getSubmissionByIdOptions({
+      submission_id: id,
+    })
+  );
+
+  console.log("error: ", error?.message);
+  if (isLoading && !data) return <>LOADING!</>;
+
+  // TODO: Proper Error handling for file URL
+  const file = data?.data.manuscripts[0].file;
+
   return (
     <div>
       <div className="flex items-center gap-2 ">
@@ -34,10 +52,10 @@ function RouteComponent() {
         />
         <div className="w-full">
           <div className="text-lg/[1.75rem] font-semibold ">
-            Name of the File
+            {file?.name || "N/A"}
           </div>
           <div className="text-sm/[1.813] text-muted-foreground">
-            Manuscript Title goes here
+            {data?.data.submission.title}
           </div>
         </div>
 
@@ -48,12 +66,14 @@ function RouteComponent() {
         </Button>
         <Button variant={"success"}>Approve</Button>
       </div>
-      <Doc />
+      <Doc url={file?.url || ""} />
     </div>
   );
 }
-
-const Doc = () => {
+type DocProps = {
+  url: string;
+};
+const Doc = ({ url }: DocProps) => {
   return (
     <div>
       <DocViewer
@@ -64,7 +84,8 @@ const Doc = () => {
         }}
         documents={[
           {
-            uri: "https://pub-c20cf6f0c5614055b150956b8e2eb462.r2.dev/uploads/0c052fb7-6899-464e-ae9b-90bafea78c60_Receptionist Job Test.docx",
+            uri: url,
+            // uri: "https://pub-c20cf6f0c5614055b150956b8e2eb462.r2.dev/uploads/0c052fb7-6899-464e-ae9b-90bafea78c60_Receptionist Job Test.docx",
             // fileType: file.type || "application/pdf", // important!
             // fileName: file.name,
           },

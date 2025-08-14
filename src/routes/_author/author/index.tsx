@@ -1,7 +1,6 @@
 import { DataTable } from "@/components/CustomTable";
 import { useAuthContext } from "@/context/AuthContext";
 import { type SubmissionData } from "@/lib/api/submissions";
-
 import { getSubmissionByIdOptions } from "@/lib/query_and_mutations/submission/getSubmissionsbyId";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
@@ -12,7 +11,7 @@ export const Route = createFileRoute("/_author/author/")({
   component: RouteComponent,
 });
 
-type JWTPayload = {
+export type JWTPayload = {
   user_id: string;
   role_name: string;
   exp: number;
@@ -23,12 +22,13 @@ function RouteComponent() {
   const token = authContext.user?.token || "";
 
   const decoded = jwtDecode<JWTPayload>(token);
-  const { user_id, role_name } = decoded;
+  const { user_id } = decoded;
+  console.log(user_id);
+  // TODO: Fix submission API for Author
 
   const { data, isLoading, error } = useQuery(
     getSubmissionByIdOptions({
-      id: user_id,
-      roleName: role_name,
+      submission_id: "4",
     })
   );
 
@@ -52,10 +52,8 @@ const columns: ColumnDef<SubmissionData>[] = [
     header: () => <span className="pr-[2rem]">File</span>,
     cell: ({ row }) => {
       // TODO:  y ugly file parsing logic!
-      const fileString = row.original?.manuscripts?.[0]?.file;
+      const fileName = row.original?.manuscripts?.[0]?.file;
 
-      const fileName =
-        fileString != undefined ? JSON.parse(fileString) : "Some File Name";
       return (
         <div className="flex flex-col pr-[2rem] py-1">
           {/* <img

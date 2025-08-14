@@ -2,7 +2,7 @@ import { DataTable } from "@/components/CustomTable";
 import type { SubmissionData } from "@/lib/api/submissions";
 import { allSubmissionOptions } from "@/lib/query_and_mutations/submission/getAllSubmissions";
 import { useQuery } from "@tanstack/react-query";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import type { ColumnDef } from "@tanstack/react-table";
 
 export const Route = createFileRoute("/_app/submissions/")({
@@ -32,22 +32,27 @@ const columns: ColumnDef<SubmissionData>[] = [
     header: () => <span className="pr-[2rem]">File</span>,
     cell: ({ row }) => {
       // TODO:  y ugly file parsing logic!
-      const fileString = row.original?.manuscripts?.[0]?.file;
+      const file = row.original?.manuscripts?.[0]?.file;
 
-      const fileName =
-        fileString != undefined ? JSON.parse(fileString) : "Some File Name";
       return (
-        <div className="flex flex-col pr-[2rem] py-1">
-          {/* <img
+        <Link
+          to="/submissions/$id"
+          params={{
+            id: row.original.submission.submission_id,
+          }}
+        >
+          <div className="flex flex-col pr-[2rem] py-1">
+            {/* <img
             src={pic.url}
             alt={row.original.name}
             className="h-10 w-10 object-cover"
           /> */}
-          <span className="text-sm">{fileName.name ?? fileName}</span>
-          <span className="text-xs text-muted-foreground">
-            {row.original.submission?.title}
-          </span>
-        </div>
+            <span className="text-sm">{file.name}</span>
+            <span className="text-xs text-muted-foreground">
+              {row.original.submission?.title}
+            </span>
+          </div>
+        </Link>
       );
     },
   },

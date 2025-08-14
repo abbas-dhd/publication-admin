@@ -1,12 +1,9 @@
 import { getSubmissionById } from "@/lib/api/submissions";
 import { queryOptions } from "@tanstack/react-query";
 
-export function getSubmissionByIdOptions(data: {
-  id: string;
-  roleName: string;
-}) {
+export function getSubmissionByIdOptions(data: { submission_id: string }) {
   return queryOptions({
-    queryKey: ["allSubmission"],
+    queryKey: ["submission", data.submission_id],
     queryFn: () => getSubmissionById(data),
   });
 }

@@ -18,6 +18,9 @@ import {
 
 export const Route = createFileRoute("/_app/my-team/add-user/")({
   component: RouteComponent,
+  loader: () => ({
+    crumb: "Add User",
+  }),
 });
 
 function RouteComponent() {

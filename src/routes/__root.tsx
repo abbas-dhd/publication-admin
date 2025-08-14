@@ -38,4 +38,7 @@ export const Route = createRootRouteWithContext<RootRouterContext>()({
       {/* <TanStackRouterDevtools /> */}
     </>
   ),
+  loader: () => ({
+    crumb: "Publication",
+  }),
 });

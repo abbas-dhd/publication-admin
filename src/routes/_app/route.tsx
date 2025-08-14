@@ -1,7 +1,13 @@
 import { AppSidebar, type SidebarLinks } from "@/components/ui/app-sidebar";
 import { useAuthContext } from "@/context/AuthContext";
-import { createFileRoute, Outlet, useNavigate } from "@tanstack/react-router";
-import { Home } from "lucide-react";
+import { useCrumbs } from "@/hooks/useCrumbs";
+import {
+  createFileRoute,
+  Link,
+  Outlet,
+  useNavigate,
+} from "@tanstack/react-router";
+import { Home, Slash } from "lucide-react";
 import { useEffect } from "react";
 
 export const Route = createFileRoute("/_app")({
@@ -31,13 +37,24 @@ function RouteComponent() {
       });
     }
   }, [authContext.user, navigate]);
+  const crumbs = useCrumbs();
+  console.log(crumbs);
 
   return (
     <>
       <AppSidebar links={items} />
       <div className="flex flex-col h-full w-full overflow-auto">
-        <div className="py-[18px] px-4 text-sm/[20px] font-semibold  text-[#717680] border-[#E9EAEB] border-b">
-          Publications (BREADCRUMBS WIP)
+        <div className="py-[18px] px-4 text-sm/[20px] font-semibold  text-[#717680] border-[#E9EAEB] border-b flex items-center gap-1">
+          {/* Publications (BREADCRUMBS WIP) */}
+
+          {crumbs?.map((item, index) => (
+            <>
+              <Link to={item.fullPath}>{item?.loaderData?.crumb}</Link>
+              {crumbs.length - 1 !== index && (
+                <Slash className="w-4 h-4 rotate-[-10deg]" />
+              )}
+            </>
+          ))}
         </div>
         <main
           className="p-6"

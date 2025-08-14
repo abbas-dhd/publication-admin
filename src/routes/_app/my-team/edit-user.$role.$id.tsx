@@ -21,6 +21,9 @@ import type z from "zod";
 
 export const Route = createFileRoute("/_app/my-team/edit-user/$role/$id")({
   component: RouteComponent,
+  loader: () => ({
+    crumb: "Edit User",
+  }),
 });
 
 const formTabs = {
@@ -31,6 +34,7 @@ const formTabs = {
 
 function RouteComponent() {
   const { id, role } = Route.useParams();
+  // TODO: See if we can get the data from loader
   const { data, isLoading, error } = useQuery(
     userQueryOptions({
       id,

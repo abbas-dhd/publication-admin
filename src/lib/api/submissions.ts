@@ -1,4 +1,5 @@
 import { SERVER_API } from "../contants";
+import type { UserFile } from "./users";
 
 export type SubmissionData = {
   submission: Submission;
@@ -9,6 +10,7 @@ export type SubmissionData = {
 
 type Submission = {
   user_id: number;
+  submission_id: string;
   reference_number: string;
   title: string;
   category: string;
@@ -19,7 +21,7 @@ type Submission = {
 
 type Manuscript = {
   id: number;
-  file: string; // JSON string containing { url: string; name: string }
+  file: UserFile; // JSON string containing { url: string; name: string }
   comments: string | null;
   checklist: string | null;
   submission_id: number;
@@ -63,16 +65,15 @@ export const getAllSubmission = async <
 export const getSubmissionById = async <
   TResponse = { data: SubmissionData; message: string },
 >(data: {
-  id: string;
-  roleName: string;
+  submission_id: string;
 }): Promise<TResponse> => {
   const { token } = JSON.parse(localStorage.getItem("authUser") || "");
 
-  const { id, roleName } = data;
+  const { submission_id: id } = data;
 
   const url = new URL(`${SERVER_API}/api/submission/get/`);
-  url.searchParams.append("user_id", id);
-  url.searchParams.append("role_name", roleName);
+  url.searchParams.append("submission_id", id);
+  // url.searchParams.append("role_name", roleName);
 
   const response = await fetch(url.toString(), {
     method: "GET",
