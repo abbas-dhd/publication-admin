@@ -32,6 +32,9 @@ export type UserData = {
   referee_postal_address?: string;
   profile_photo: UserFile;
   education_certificate?: UserFile;
+
+  status?: string;
+  submission_assigned?: number;
 };
 export type NewUserDataRespnse = {
   data: unknown;
@@ -90,7 +93,7 @@ export const getAllUsers = async <
   return response.json();
 };
 
-export type UserDataWithId = UserData & { user_id: string };
+export type UserDataWithId = UserData & { user_id: number };
 
 export const editUser = async <TResponse = NewUserDataRespnse>(
   data: UserDataWithId
@@ -98,7 +101,7 @@ export const editUser = async <TResponse = NewUserDataRespnse>(
   const { token } = JSON.parse(localStorage.getItem("authUser") || "");
 
   const url = new URL(`${SERVER_API}/api/myteam/update/`);
-  url.searchParams.append("user_id", data.user_id);
+  url.searchParams.append("user_id", `${data.user_id}`);
   url.searchParams.append("role_name", data.role_name);
 
   const response = await fetch(url.toString(), {

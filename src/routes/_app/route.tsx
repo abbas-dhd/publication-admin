@@ -13,7 +13,7 @@ import { useEffect } from "react";
 export const Route = createFileRoute("/_app")({
   component: RouteComponent,
   beforeLoad: async ({ context }) => {
-    console.log(context, "hahaha");
+    // console.log(context, "hahaha");
 
     const { auth } = context;
     if (auth && auth.isAuthenticated()) {
@@ -38,7 +38,7 @@ function RouteComponent() {
     }
   }, [authContext.user, navigate]);
   const crumbs = useCrumbs();
-  console.log(crumbs);
+  // console.log(crumbs);
 
   return (
     <>

@@ -3,7 +3,7 @@ import { isMatch, useMatches } from "@tanstack/react-router";
 export const useCrumbs = () => {
   const matches = useMatches();
 
-  console.log(matches);
+  // console.log(matches);
 
   if (matches.some((match) => match.status === "pending")) return null;
 

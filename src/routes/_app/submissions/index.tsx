@@ -60,7 +60,9 @@ const columns: ColumnDef<SubmissionData>[] = [
     accessorKey: "author",
     header: () => <span className="px-[2rem]">Status</span>,
     cell: ({ row }) => (
-      <span className="px-[2rem]">{row.original.submission.status}</span>
+      <span className="px-[2rem]">
+        {row.original.submission.status?.label ?? "N/A"}
+      </span>
     ),
   },
   {

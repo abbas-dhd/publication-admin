@@ -22,7 +22,11 @@ type RoleData = {
 function RouteComponent() {
   const [activeRole, setCurrentActiveRole] = useState<UserRole>("editor");
 
-  const { data, isLoading, error } = useQuery(allUsersQueryOptions());
+  const { data, isLoading, error } = useQuery(
+    allUsersQueryOptions({
+      enabled: true,
+    })
+  );
   const navigate = Route.useNavigate();
 
   const editor = data?.data.editors || [];
@@ -103,7 +107,7 @@ function RouteComponent() {
                   navigate({
                     to: "/my-team/edit-user/$role/$id",
                     params: {
-                      id: row.original.user_id,
+                      id: `${row.original.user_id}`,
                       role: row.original.role_name,
                     },
                   });

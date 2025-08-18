@@ -14,7 +14,10 @@ type Submission = {
   reference_number: string;
   title: string;
   category: string;
-  status: string;
+  status: {
+    name: string;
+    label: string;
+  };
   created_at: number;
   updated_at: number;
 };

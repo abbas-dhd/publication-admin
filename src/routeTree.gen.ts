@@ -22,7 +22,9 @@ import { Route as AppPublishedManuscriptsIndexRouteImport } from './routes/_app/
 import { Route as AppProspectiveAuthorsIndexRouteImport } from './routes/_app/prospective-authors/index'
 import { Route as AppMyTeamIndexRouteImport } from './routes/_app/my-team/index'
 import { Route as AppSubmissionsIdIndexRouteImport } from './routes/_app/submissions/$id/index'
+import { Route as AppPublishedManuscriptsVolumeIndexRouteImport } from './routes/_app/published-manuscripts/$volume/index'
 import { Route as AppMyTeamAddUserIndexRouteImport } from './routes/_app/my-team/add-user/index'
+import { Route as AppPublishedManuscriptsVolumeIssueIndexRouteImport } from './routes/_app/published-manuscripts/$volume/$issue/index'
 import { Route as AppMyTeamEditUserRoleIdRouteImport } from './routes/_app/my-team/edit-user.$role.$id'
 
 const AuthorRouteRoute = AuthorRouteRouteImport.update({
@@ -90,11 +92,23 @@ const AppSubmissionsIdIndexRoute = AppSubmissionsIdIndexRouteImport.update({
   path: '/$id/',
   getParentRoute: () => AppSubmissionsRouteRoute,
 } as any)
+const AppPublishedManuscriptsVolumeIndexRoute =
+  AppPublishedManuscriptsVolumeIndexRouteImport.update({
+    id: '/published-manuscripts/$volume/',
+    path: '/published-manuscripts/$volume/',
+    getParentRoute: () => AppRouteRoute,
+  } as any)
 const AppMyTeamAddUserIndexRoute = AppMyTeamAddUserIndexRouteImport.update({
   id: '/add-user/',
   path: '/add-user/',
   getParentRoute: () => AppMyTeamRouteRoute,
 } as any)
+const AppPublishedManuscriptsVolumeIssueIndexRoute =
+  AppPublishedManuscriptsVolumeIssueIndexRouteImport.update({
+    id: '/published-manuscripts/$volume/$issue/',
+    path: '/published-manuscripts/$volume/$issue/',
+    getParentRoute: () => AppRouteRoute,
+  } as any)
 const AppMyTeamEditUserRoleIdRoute = AppMyTeamEditUserRoleIdRouteImport.update({
   id: '/edit-user/$role/$id',
   path: '/edit-user/$role/$id',
@@ -113,8 +127,10 @@ export interface FileRoutesByFullPath {
   '/login': typeof AuthLoginIndexRoute
   '/author': typeof AuthorAuthorIndexRoute
   '/my-team/add-user': typeof AppMyTeamAddUserIndexRoute
+  '/published-manuscripts/$volume': typeof AppPublishedManuscriptsVolumeIndexRoute
   '/submissions/$id': typeof AppSubmissionsIdIndexRoute
   '/my-team/edit-user/$role/$id': typeof AppMyTeamEditUserRoleIdRoute
+  '/published-manuscripts/$volume/$issue': typeof AppPublishedManuscriptsVolumeIssueIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof AppIndexRoute
@@ -126,8 +142,10 @@ export interface FileRoutesByTo {
   '/login': typeof AuthLoginIndexRoute
   '/author': typeof AuthorAuthorIndexRoute
   '/my-team/add-user': typeof AppMyTeamAddUserIndexRoute
+  '/published-manuscripts/$volume': typeof AppPublishedManuscriptsVolumeIndexRoute
   '/submissions/$id': typeof AppSubmissionsIdIndexRoute
   '/my-team/edit-user/$role/$id': typeof AppMyTeamEditUserRoleIdRoute
+  '/published-manuscripts/$volume/$issue': typeof AppPublishedManuscriptsVolumeIssueIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -144,8 +162,10 @@ export interface FileRoutesById {
   '/_auth/login/': typeof AuthLoginIndexRoute
   '/_author/author/': typeof AuthorAuthorIndexRoute
   '/_app/my-team/add-user/': typeof AppMyTeamAddUserIndexRoute
+  '/_app/published-manuscripts/$volume/': typeof AppPublishedManuscriptsVolumeIndexRoute
   '/_app/submissions/$id/': typeof AppSubmissionsIdIndexRoute
   '/_app/my-team/edit-user/$role/$id': typeof AppMyTeamEditUserRoleIdRoute
+  '/_app/published-manuscripts/$volume/$issue/': typeof AppPublishedManuscriptsVolumeIssueIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -161,8 +181,10 @@ export interface FileRouteTypes {
     | '/login'
     | '/author'
     | '/my-team/add-user'
+    | '/published-manuscripts/$volume'
     | '/submissions/$id'
     | '/my-team/edit-user/$role/$id'
+    | '/published-manuscripts/$volume/$issue'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -174,8 +196,10 @@ export interface FileRouteTypes {
     | '/login'
     | '/author'
     | '/my-team/add-user'
+    | '/published-manuscripts/$volume'
     | '/submissions/$id'
     | '/my-team/edit-user/$role/$id'
+    | '/published-manuscripts/$volume/$issue'
   id:
     | '__root__'
     | '/_app'
@@ -191,8 +215,10 @@ export interface FileRouteTypes {
     | '/_auth/login/'
     | '/_author/author/'
     | '/_app/my-team/add-user/'
+    | '/_app/published-manuscripts/$volume/'
     | '/_app/submissions/$id/'
     | '/_app/my-team/edit-user/$role/$id'
+    | '/_app/published-manuscripts/$volume/$issue/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -295,12 +321,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppSubmissionsIdIndexRouteImport
       parentRoute: typeof AppSubmissionsRouteRoute
     }
+    '/_app/published-manuscripts/$volume/': {
+      id: '/_app/published-manuscripts/$volume/'
+      path: '/published-manuscripts/$volume'
+      fullPath: '/published-manuscripts/$volume'
+      preLoaderRoute: typeof AppPublishedManuscriptsVolumeIndexRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
     '/_app/my-team/add-user/': {
       id: '/_app/my-team/add-user/'
       path: '/add-user'
       fullPath: '/my-team/add-user'
       preLoaderRoute: typeof AppMyTeamAddUserIndexRouteImport
       parentRoute: typeof AppMyTeamRouteRoute
+    }
+    '/_app/published-manuscripts/$volume/$issue/': {
+      id: '/_app/published-manuscripts/$volume/$issue/'
+      path: '/published-manuscripts/$volume/$issue'
+      fullPath: '/published-manuscripts/$volume/$issue'
+      preLoaderRoute: typeof AppPublishedManuscriptsVolumeIssueIndexRouteImport
+      parentRoute: typeof AppRouteRoute
     }
     '/_app/my-team/edit-user/$role/$id': {
       id: '/_app/my-team/edit-user/$role/$id'
@@ -347,6 +387,8 @@ interface AppRouteRouteChildren {
   AppIndexRoute: typeof AppIndexRoute
   AppProspectiveAuthorsIndexRoute: typeof AppProspectiveAuthorsIndexRoute
   AppPublishedManuscriptsIndexRoute: typeof AppPublishedManuscriptsIndexRoute
+  AppPublishedManuscriptsVolumeIndexRoute: typeof AppPublishedManuscriptsVolumeIndexRoute
+  AppPublishedManuscriptsVolumeIssueIndexRoute: typeof AppPublishedManuscriptsVolumeIssueIndexRoute
 }
 
 const AppRouteRouteChildren: AppRouteRouteChildren = {
@@ -355,6 +397,10 @@ const AppRouteRouteChildren: AppRouteRouteChildren = {
   AppIndexRoute: AppIndexRoute,
   AppProspectiveAuthorsIndexRoute: AppProspectiveAuthorsIndexRoute,
   AppPublishedManuscriptsIndexRoute: AppPublishedManuscriptsIndexRoute,
+  AppPublishedManuscriptsVolumeIndexRoute:
+    AppPublishedManuscriptsVolumeIndexRoute,
+  AppPublishedManuscriptsVolumeIssueIndexRoute:
+    AppPublishedManuscriptsVolumeIssueIndexRoute,
 }
 
 const AppRouteRouteWithChildren = AppRouteRoute._addFileChildren(
