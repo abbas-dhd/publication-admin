@@ -163,11 +163,9 @@ const Doc = ({ url }: DocProps) => {
             // fileName: file.name,
           },
         ]}
-        requestHeaders={
-          {
-            // Origin: "http://localhost:5173/",
-          }
-        }
+        requestHeaders={{
+          Origin: "https://admin-publication.netlify.app/",
+        }}
         pluginRenderers={DocViewerRenderers}
         style={{
           height: "80vh",
