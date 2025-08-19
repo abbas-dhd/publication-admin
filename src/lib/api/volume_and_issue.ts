@@ -62,7 +62,7 @@ export type IssueResponse = {
 
 // TODO: create a common type for all issues and volumes
 export type Issue = {
-  issue_id: string;
+  id: string;
   title: string;
   thumbnail: UserFile;
   start_date: string;

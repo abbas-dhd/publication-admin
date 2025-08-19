@@ -48,7 +48,11 @@ const RefereeDetailsForm = ({
                 <FormItem>
                   <FormLabel>Name of Referee</FormLabel>
                   <FormControl>
-                    <Input placeholder="Enter full name" {...field} />
+                    <Input
+                      placeholder="Enter full name"
+                      {...field}
+                      value={field.value ?? ""}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -61,7 +65,11 @@ const RefereeDetailsForm = ({
                 <FormItem>
                   <FormLabel>Phone of Referee</FormLabel>
                   <FormControl>
-                    <Input placeholder="10 digit phone number" {...field} />
+                    <Input
+                      placeholder="10 digit phone number"
+                      {...field}
+                      value={field.value ?? ""}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -74,7 +82,11 @@ const RefereeDetailsForm = ({
                 <FormItem>
                   <FormLabel>Alternate Phone of Referee</FormLabel>
                   <FormControl>
-                    <Input placeholder="10 digit phone number" {...field} />
+                    <Input
+                      placeholder="10 digit phone number"
+                      {...field}
+                      value={field.value ?? ""}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -87,7 +99,11 @@ const RefereeDetailsForm = ({
                 <FormItem>
                   <FormLabel>Email ID of Referee</FormLabel>
                   <FormControl>
-                    <Input placeholder="Enter your email" {...field} />
+                    <Input
+                      placeholder="Enter your email"
+                      {...field}
+                      value={field.value ?? ""}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -100,7 +116,11 @@ const RefereeDetailsForm = ({
                 <FormItem>
                   <FormLabel>Postal Address of Referee</FormLabel>
                   <FormControl>
-                    <Textarea placeholder="Enter your address" {...field} />
+                    <Textarea
+                      placeholder="Enter your address"
+                      {...field}
+                      value={field.value ?? ""}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

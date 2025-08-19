@@ -13,25 +13,25 @@ export type UserData = {
   role_name: string;
   name: string;
   mobile: string;
-  alternate_mobile?: string;
+  alternate_mobile?: string | null;
   email: string;
   postal_address: string;
   education_qualification: string;
   preferred_subjects_for_review: string[];
   // Institution details
   institution_name: string;
-  institution_mobile?: string;
-  institution_alternate_mobile?: string;
-  institution_email?: string;
+  institution_mobile?: string | null;
+  institution_alternate_mobile?: string | null;
+  institution_email?: string | null;
   institution_postal_address: string;
   // Referr details
-  referee_name?: string;
-  referee_mobile?: string;
-  referee_alternate_mobile?: string;
-  referee_email?: string;
-  referee_postal_address?: string;
+  referee_name?: string | null;
+  referee_mobile?: string | null;
+  referee_alternate_mobile?: string | null;
+  referee_email?: string | null;
+  referee_postal_address?: string | null;
   profile_photo: UserFile;
-  education_certificate?: UserFile;
+  education_certificate?: UserFile | null;
 
   status?: string;
   submission_assigned?: number;

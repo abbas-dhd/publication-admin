@@ -11,9 +11,14 @@ export const PersonalDetailsSchema = z.object({
     .string()
     .transform((val) => (val === "" ? undefined : val))
     .optional()
-    .refine((val) => val === undefined || /^[1-9]\d{9}$/.test(val.trim()), {
-      message: "Invalid mobile number. Must be 10 digits Phone number.",
-    }),
+    .nullable()
+    .refine(
+      (val) =>
+        val === undefined || val === null || /^[1-9]\d{9}$/.test(val.trim()),
+      {
+        message: "Invalid mobile number. Must be 10 digits Phone number.",
+      }
+    ),
   email: z.email(),
   address: z.string(),
   // profile_photo: z.string(),
@@ -28,7 +33,9 @@ export const PersonalDetailsSchema = z.object({
       url: z.url(),
       name: z.string(),
     })
-    .optional(),
+    .optional()
+    .nullable(),
+
   // qualification_cert: z.string(),
   preferred_review_subjects: z.string().array().min(1),
 });
@@ -39,47 +46,65 @@ export const InstitutionDetailsSchema = z.object({
     .string()
     .transform((val) => (val === "" ? undefined : val))
     .optional()
-    .refine((val) => val === undefined || /^[1-9]\d{9}$/.test(val), {
-      message: "Invalid mobile number. Must be 10 digits Phone number.",
-    }),
+    .nullable()
+    .refine(
+      (val) => val === undefined || val === null || /^[1-9]\d{9}$/.test(val),
+      {
+        message: "Invalid mobile number. Must be 10 digits Phone number.",
+      }
+    ),
   alt_institution_phone: z
     .string()
     .transform((val) => (val === "" ? undefined : val))
     .optional()
-    .refine((val) => val === undefined || /^[1-9]\d{9}$/.test(val), {
-      message: "Invalid mobile number. Must be 10 digits Phone number.",
-    }),
+    .nullable()
+    .refine(
+      (val) => val === undefined || val === null || /^[1-9]\d{9}$/.test(val),
+      {
+        message: "Invalid mobile number. Must be 10 digits Phone number.",
+      }
+    ),
 
   insitution_email: z
     .email()
     .or(z.literal("").transform(() => undefined))
-    .optional(),
+    .optional()
+    .nullable(),
 
   institution_address: z.string(),
 });
 
 export const RefereeDetailsSchema = z
   .object({
-    referee_name: z.string().optional(),
+    referee_name: z.string().optional().nullable(),
     referee_phone: z
       .string()
       .transform((val) => (val === "" ? undefined : val))
       .optional()
-      .refine((val) => val === undefined || /^[1-9]\d{9}$/.test(val), {
-        message: "Invalid mobile number. Must be 10 digits Phone number.",
-      }),
+      .nullable()
+      .refine(
+        (val) => val === undefined || val === null || /^[1-9]\d{9}$/.test(val),
+        {
+          message: "Invalid mobile number. Must be 10 digits Phone number.",
+        }
+      ),
     alt_referee_phone: z
       .string()
       .transform((val) => (val === "" ? undefined : val))
       .optional()
-      .refine((val) => val === undefined || /^[1-9]\d{9}$/.test(val), {
-        message: "Invalid mobile number. Must be 10 digits Phone number.",
-      }),
+      .nullable()
+      .refine(
+        (val) => val === undefined || val === null || /^[1-9]\d{9}$/.test(val),
+        {
+          message: "Invalid mobile number. Must be 10 digits Phone number.",
+        }
+      ),
     referee_email: z
       .email()
       .or(z.literal("").transform(() => undefined))
-      .optional(),
-    referee_address: z.string().optional(),
+      .optional()
+      .nullable(),
+    referee_address: z.string().optional().nullable(),
   })
   .refine(
     (data) => {

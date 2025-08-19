@@ -56,7 +56,11 @@ const InstitutionDetailsForm = ({
                 <FormItem>
                   <FormLabel>Phone of Institution</FormLabel>
                   <FormControl>
-                    <Input placeholder="10 digit phone number" {...field} />
+                    <Input
+                      placeholder="10 digit phone number"
+                      {...field}
+                      value={field.value ?? ""}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -69,7 +73,11 @@ const InstitutionDetailsForm = ({
                 <FormItem>
                   <FormLabel>Alternate Phone of Institution</FormLabel>
                   <FormControl>
-                    <Input placeholder="10 digit phone number" {...field} />
+                    <Input
+                      placeholder="10 digit phone number"
+                      {...field}
+                      value={field.value ?? ""}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -82,7 +90,11 @@ const InstitutionDetailsForm = ({
                 <FormItem>
                   <FormLabel>Email ID of Institution</FormLabel>
                   <FormControl>
-                    <Input placeholder="Enter your email" {...field} />
+                    <Input
+                      placeholder="Enter your email"
+                      {...field}
+                      value={field.value ?? ""}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

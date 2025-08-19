@@ -1098,7 +1098,7 @@ const RC_Publish = ({ submission_id }: { submission_id: string }) => {
   const pubsishManuscript = () => {
     // TODO: handle it errors and undefined value properly
     const volume_id =
-      currentIssue?.issue_id === issue
+      currentIssue?.id === issue
         ? currentIssue.volume_id
         : nextIssue?.volume_id;
 
@@ -1137,10 +1137,10 @@ const RC_Publish = ({ submission_id }: { submission_id: string }) => {
 
           <SelectContent>
             {/* TODO: change it API based */}
-            <SelectItem value={currentIssue?.issue_id || "0"}>
+            <SelectItem value={currentIssue?.id || "0"}>
               (Current Issue) {currentIssue?.title}
             </SelectItem>
-            <SelectItem value={nextIssue?.issue_id || "0"}>
+            <SelectItem value={nextIssue?.id || "0"}>
               (Next Issue) {nextIssue?.title}
             </SelectItem>
           </SelectContent>

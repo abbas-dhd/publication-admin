@@ -23,10 +23,10 @@ export const useEditUser = <
     ...options,
     onSuccess: (data, variables, context) => {
       queryClient.invalidateQueries({
-        queryKey: [
-          ["allUsers"],
-          ["user", variables.user_id, variables.role_name],
-        ],
+        queryKey: ["allUsers"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["user", variables.user_id, variables.role_name],
       });
       options?.onSuccess?.(data, variables, context);
     },

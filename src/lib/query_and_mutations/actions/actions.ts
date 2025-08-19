@@ -20,6 +20,9 @@ export const useCallAction = <
       queryClient.invalidateQueries({
         queryKey: ["submission", variables.submission_id],
       });
+      queryClient.invalidateQueries({
+        queryKey: ["submission-actions", variables.submission_id],
+      });
       options?.onSuccess?.(data, variables, context);
     },
   });

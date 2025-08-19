@@ -44,9 +44,6 @@ export const preferredOptions = [
   { value: "international_law", label: "International Law" },
   { value: "space_law", label: "Space Law" },
   { value: "all_of_the_above", label: "All of the Above" },
-  { value: "criminal_law", label: "Criminal Law" },
-  { value: "civil_law", label: "Civil Law" },
-  { value: "corporate_law", label: "Corporate Law" },
 ];
 
 type PersonalDetailsFormProp = {
@@ -132,7 +129,11 @@ const PersonalDetailsForm = ({
                 <FormItem>
                   <FormLabel>Alternate Phone</FormLabel>
                   <FormControl>
-                    <Input placeholder="10 digit phone number" {...field} />
+                    <Input
+                      placeholder="10 digit phone number"
+                      {...field}
+                      value={field.value ?? ""}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
