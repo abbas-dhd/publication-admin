@@ -17,6 +17,7 @@ import LoginImage from "@/assets/login_image.jpg";
 import OPUS_JURIS_ICON from "@/assets/opus_juris_logo_icon.png";
 import OPUS_JURIS_TEXT from "@/assets/opus_juris_logo_text.png";
 import { useAuthorLogin } from "@/lib/query_and_mutations/author/useAuthorLogin";
+import { ArrowRight } from "lucide-react";
 
 export const Route = createFileRoute("/_auth/author-login/")({
   component: Login,
@@ -98,7 +99,7 @@ const LoginForm = () => {
           Author login to Publications
         </h2>
         <p className="text-sm/[16px] font-[400] text-[#535862] mb-10">
-          Enter the login credential sent to you over email,
+          Enter the login credential sent to you over email.
         </p>
       </div>
       <div className="w-full max-w-[400px] ">
@@ -147,12 +148,19 @@ const LoginForm = () => {
             )}
           </form>
         </Form>
-        <p className="text-sm/[20px]">
-          Facing Issues?{" "}
-          <a href="#" className="underline">
-            Contact us
-          </a>
-        </p>
+        <div className="flex gap-2 items-end justify-between">
+          <p className="text-sm/[20px]">
+            Facing Issues?{" "}
+            <a href="#" className="underline">
+              Contact us
+            </a>
+          </p>
+          <Button asChild>
+            <Link to="/login">
+              Staff Login <ArrowRight />
+            </Link>
+          </Button>
+        </div>
       </div>
     </>
   );

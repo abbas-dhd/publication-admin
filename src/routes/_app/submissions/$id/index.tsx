@@ -1,13 +1,8 @@
 import "./style.css";
 import DocViewer, { DocViewerRenderers } from "@cyntler/react-doc-viewer";
 import { createFileRoute } from "@tanstack/react-router";
-import { ArrowLeft, Ellipsis, Redo2 } from "lucide-react";
+import { ArrowLeft, Redo2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 import { Accordion } from "@radix-ui/react-accordion";
 import {
   AccordionContent,
@@ -56,6 +51,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { FileUploadServer } from "@/components/FileUploadServer";
+import { currentAndNextIssueQueryOption } from "@/lib/query_and_mutations/volume_issue/getCurrentAndNextIssue";
 
 export const Route = createFileRoute("/_app/submissions/$id/")({
   component: RouteComponent,
@@ -109,9 +106,12 @@ function RouteComponent() {
           </div>
         </div>
         {/* TODO: Add condition before pushing */}
-        <MoreActions actions={actions} submission_id={id} />
+
         {revertAction && (
           <RevertToAuthor submission_id={id} revertType={revertAction.name} />
+        )}
+        {actions.some((action) => action.name === "reject") && (
+          <RejectModal submission_id={id} />
         )}
         {actions.find((item) => item.name === "assign_reviewer") && (
           <AssignReviewers submission_id={id} />
@@ -136,6 +136,9 @@ function RouteComponent() {
         )}
         {actions.find((item) => item.name === "publish") && (
           <RC_Publish submission_id={id} />
+        )}
+        {actions.find((item) => item.name === "overwrite") && (
+          <FileOverwrite submission_id={id} />
         )}
       </div>
       <Doc url={file?.url || ""} />
@@ -226,29 +229,27 @@ const Doc = ({ url }: DocProps) => {
   );
 };
 
-const MoreActions = ({
-  actions,
-  submission_id,
-}: {
-  actions: {
-    name: string;
-    label: string;
-  }[];
-  submission_id: string;
-}) => {
-  return (
-    <Popover>
-      <PopoverTrigger className="py-2 px-4 rounded-md border">
-        <Ellipsis className="h-5 w-5" />
-      </PopoverTrigger>
-      <PopoverContent className="w-fit flex flex-col p-2">
-        {actions.some((action) => action.name === "reject") && (
-          <RejectModal submission_id={submission_id} />
-        )}
-      </PopoverContent>
-    </Popover>
-  );
-};
+// const MoreActions = ({
+//   actions,
+//   submission_id,
+// }: {
+//   actions: {
+//     name: string;
+//     label: string;
+//   }[];
+//   submission_id: string;
+// }) => {
+//   return (
+//     <Popover>
+//       <PopoverTrigger className="py-2 px-4 rounded-md border">
+//         <Ellipsis className="h-5 w-5" />
+//       </PopoverTrigger>
+//       <PopoverContent className="w-fit flex flex-col p-2">
+
+//       </PopoverContent>
+//     </Popover>
+//   );
+// };
 
 const RejectModal = ({ submission_id }: { submission_id: string }) => {
   const { mutate } = useCallAction();
@@ -893,7 +894,7 @@ export function EditorListForm({
               <FormControl>
                 <RadioGroup
                   // RadioGroup still deals with strings, so we convert
-                  onValueChange={(val) => field.onChange([Number(val)])}
+                  onValueChange={(value) => field.onChange([Number(value)])}
                   value={field.value?.toString()}
                   className="max-h-80 overflow-y-auto space-y-3 p-2 border rounded-md"
                 >
@@ -1089,14 +1090,24 @@ const RC_MarkPaymentDone = ({ submission_id }: { submission_id: string }) => {
 const RC_Publish = ({ submission_id }: { submission_id: string }) => {
   const { mutate } = useCallAction();
   const [issue, setIssue] = useState<string>("");
+  const { data } = useQuery(currentAndNextIssueQueryOption());
+
+  const currentIssue = data?.data.current_issue;
+  const nextIssue = data?.data.next_issue;
 
   const pubsishManuscript = () => {
+    // TODO: handle it errors and undefined value properly
+    const volume_id =
+      currentIssue?.issue_id === issue
+        ? currentIssue.volume_id
+        : nextIssue?.volume_id;
+
     mutate({
       action_name: "publish",
       submission_id: submission_id,
       details: {
-        issue_id: Number(6),
-        volume_id: 1, //TODO: take it from API
+        issue_id: Number(issue),
+        volume_id: Number(volume_id) || 0, //TODO: take it from API
       },
     });
   };
@@ -1126,8 +1137,12 @@ const RC_Publish = ({ submission_id }: { submission_id: string }) => {
 
           <SelectContent>
             {/* TODO: change it API based */}
-            <SelectItem value="1">Current Issue</SelectItem>
-            <SelectItem value="2">Next Issue</SelectItem>
+            <SelectItem value={currentIssue?.issue_id || "0"}>
+              (Current Issue) {currentIssue?.title}
+            </SelectItem>
+            <SelectItem value={nextIssue?.issue_id || "0"}>
+              (Next Issue) {nextIssue?.title}
+            </SelectItem>
           </SelectContent>
         </Select>
 
@@ -1140,6 +1155,73 @@ const RC_Publish = ({ submission_id }: { submission_id: string }) => {
           <DialogClose asChild>
             <Button type="button" onClick={pubsishManuscript} disabled={!issue}>
               Publish
+            </Button>
+          </DialogClose>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+};
+const FileSchema = z.object({
+  url: z.string(),
+  name: z.string(),
+});
+
+const FileForm = z.object({
+  file: FileSchema,
+});
+
+const FileOverwrite = ({ submission_id }: { submission_id: string }) => {
+  const { mutate } = useCallAction();
+  const form = useForm<z.infer<typeof FileForm>>({
+    resolver: zodResolver(FileForm),
+  });
+
+  const handleOverwrite = () => {
+    mutate({
+      action_name: "overwrite",
+      details: {
+        file: {
+          name: form.getValues().file.name,
+          url: form.getValues().file.url,
+        },
+      },
+      submission_id: submission_id,
+    });
+  };
+
+  return (
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button variant={"default"} className="">
+          Replace Manuscript
+        </Button>
+      </DialogTrigger>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Replace Document?</DialogTitle>
+          <DialogDescription>
+            Overwrite existing manuscript with a new document?
+          </DialogDescription>
+        </DialogHeader>
+
+        <div className="flex flex-col justify-center items-center gap-4">
+          <FileUploadServer name="file" control={form.control} />
+        </div>
+
+        <DialogFooter className="sm:justify-end">
+          <DialogClose asChild>
+            <Button type="button" variant="secondary" className="border">
+              Close
+            </Button>
+          </DialogClose>
+          <DialogClose asChild>
+            <Button
+              type="button"
+              disabled={!form.formState.isValid}
+              onClick={handleOverwrite}
+            >
+              Replace
             </Button>
           </DialogClose>
         </DialogFooter>

@@ -13,6 +13,9 @@ import { Link, type ValidateLinkOptions } from "@tanstack/react-router";
 import OPUS_JURIS_ICON from "@/assets/opus_juris_logo_icon.png";
 import OPUS_JURIS_TEXT from "@/assets/opus_juris_logo_text.png";
 import { twMerge } from "tailwind-merge";
+import { LogOut } from "lucide-react";
+import { Button } from "./button";
+import { useAuthContext } from "@/context/AuthContext";
 
 type AppSidebarProps = {
   links: SidebarLinks[];
@@ -61,6 +64,7 @@ const SidebarHeaderContent = () => {
   const sidebar = useSidebar();
   const isCollapsed = sidebar.state === "collapsed";
   const isExpanded = sidebar.state === "expanded";
+
   return (
     <div
       className={twMerge(
@@ -81,9 +85,13 @@ const SidebarHeaderContent = () => {
   );
 };
 const SidebarFooterContent = () => {
+  const { logout } = useAuthContext();
   return (
-    <div className="p-4 flex items-center border-t border-[#E9EAEB]">
+    <div className="p-4 flex items-center border-t border-[#E9EAEB] justify-between">
       <div className="h-[40px] w-[40px] rounded-full bg-red-900"></div>
+      <Button variant={"outline"} onClick={logout} title="Logout">
+        <LogOut className="text-red-700" />
+      </Button>
     </div>
   );
 };

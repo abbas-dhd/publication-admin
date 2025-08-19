@@ -47,6 +47,7 @@ export type ResubmitTypes =
   | "second_resubmit"
   | "third_resubmit"
   | "fourth_resubmit";
+
 export type ActionPayload =
   | {
       submission_id: string;
@@ -109,7 +110,7 @@ export type ActionPayload =
     }
   | {
       submission_id: string;
-      action_name: ResubmitTypes;
+      action_name: ResubmitTypes | "overwrite";
       details: {
         file: UserFile;
       };

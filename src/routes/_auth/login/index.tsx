@@ -26,6 +26,7 @@ import usePreventUnload from "@/lib/usePreventUnload";
 import { useAuthOTPRequest } from "@/lib/query_and_mutations/useAuthOTPRequest";
 import { useAuthSendOTP } from "@/lib/query_and_mutations/useAuthSendOTP";
 import { useAuthContext } from "@/context/AuthContext";
+import { ArrowRight } from "lucide-react";
 
 export const Route = createFileRoute("/_auth/login/")({
   component: Login,
@@ -109,9 +110,7 @@ const LoginForm = ({ onLoginSucess }: LoginFormProps) => {
   });
 
   function onSubmit(data: z.infer<typeof loginFormSchema>) {
-    let phoneNumber = data.phone_number;
-    // append 91 as country code
-    if (phoneNumber.length <= 10) phoneNumber = `91${phoneNumber}`;
+    const phoneNumber = data.phone_number;
 
     authOTPRequest.mutate({ mobile: phoneNumber });
   }
@@ -159,12 +158,19 @@ const LoginForm = ({ onLoginSucess }: LoginFormProps) => {
             )}
           </form>
         </Form>
-        <p className="text-sm/[20px]">
-          Facing Issues?{" "}
-          <a href="#" className="underline">
-            Contact us
-          </a>
-        </p>
+        <div className="flex gap-2 items-end justify-between">
+          <p className="text-sm/[20px]">
+            Facing Issues?{" "}
+            <a href="#" className="underline">
+              Contact us
+            </a>
+          </p>
+          <Button asChild>
+            <Link to="/author-login">
+              Author Login <ArrowRight />
+            </Link>
+          </Button>
+        </div>
       </div>
     </>
   );
@@ -204,8 +210,7 @@ const OTP_Form = ({ phoneNumber }: OTPFormType) => {
   function onSubmit(data: z.infer<typeof oTPFormSchema>) {
     console.log("Form submitted:", data);
 
-    const mobile = `91${phoneNumber}`;
-    authSendOTP.mutate({ mobile, otp: data.otp_number });
+    authSendOTP.mutate({ mobile: phoneNumber, otp: data.otp_number });
   }
   console.log(form.formState.errors);
   usePreventUnload(true);
@@ -261,7 +266,7 @@ const OTP_Form = ({ phoneNumber }: OTPFormType) => {
               className="w-full cursor-pointer"
               disabled={!form.formState.isValid || authSendOTP.isPending}
             >
-              Send OTP
+              Verify OTP
             </Button>
             {/* <FormMessage /> */}
           </form>

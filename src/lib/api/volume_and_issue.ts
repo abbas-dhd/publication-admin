@@ -213,3 +213,32 @@ export const getAllManuscripts = async <TResponse = ManuscriptResponse>({
 
   return response.json();
 };
+
+export const getCurrentAndNextIssue = async <
+  TResponse = {
+    message: string;
+    data: {
+      current_issue: Issue;
+      next_issue: Issue;
+    };
+  },
+>(): Promise<TResponse> => {
+  const { token } = JSON.parse(localStorage.getItem("authUser") || "");
+
+  const url = new URL(`${SERVER_API}/api/issue/current-and-next/`);
+
+  const response = await fetch(url, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.message || "Authentication failed");
+  }
+
+  return response.json();
+};
