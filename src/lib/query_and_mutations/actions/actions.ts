@@ -1,6 +1,11 @@
-import { callAction, type ActionPayload } from "@/lib/api/actions";
+import {
+  callAction,
+  getChecklistItems,
+  type ActionPayload,
+} from "@/lib/api/actions";
 import {
   useMutation,
+  useQuery,
   useQueryClient,
   type UseMutationOptions,
 } from "@tanstack/react-query";
@@ -27,3 +32,10 @@ export const useCallAction = <
     },
   });
 };
+
+export function useGetCheckList() {
+  return useQuery({
+    queryKey: ["checklist-items"],
+    queryFn: () => getChecklistItems(),
+  });
+}

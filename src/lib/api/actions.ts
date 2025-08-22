@@ -144,3 +144,33 @@ export const callAction = async <
 
   return response.json();
 };
+
+export type CheckListItem = {
+  item: string;
+  checked: boolean;
+};
+
+export const getChecklistItems = async <
+  TResponse = ActionsResponse<CheckListItem[]>,
+>(): Promise<TResponse> => {
+  // submission_id: string
+  const { token } = JSON.parse(localStorage.getItem("authUser") || "");
+
+  const url = new URL(`${SERVER_API}/api/checklist/get-checklist`);
+  // url.searchParams.append("submission_id", submission_id);
+
+  const response = await fetch(url, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.message || "Authentication failed");
+  }
+
+  return response.json();
+};

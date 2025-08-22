@@ -24,7 +24,10 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { useCallAction } from "@/lib/query_and_mutations/actions/actions";
+import {
+  useCallAction,
+  useGetCheckList,
+} from "@/lib/query_and_mutations/actions/actions";
 import { useEffect, useState } from "react";
 import { Textarea } from "@/components/ui/textarea";
 import { useForm, type UseFormReturn } from "react-hook-form";
@@ -40,7 +43,7 @@ import {
 } from "@/components/ui/form";
 import { allUsersQueryOptions } from "@/lib/query_and_mutations/user/useGetAllUsers";
 import type { UserDataWithId } from "@/lib/api/users";
-import type { RevertTypes } from "@/lib/api/actions";
+import type { CheckListItem, RevertTypes } from "@/lib/api/actions";
 import { cn } from "@/lib/utils";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 // import { DevTool } from "@hookform/devtools";
@@ -76,12 +79,17 @@ function RouteComponent() {
     })
   );
 
+  const { data: checklistData } = useGetCheckList();
+
+  const checkListItems = checklistData?.data || ([] as CheckListItem[]);
+  // console.log("checklist data", checklistData);
+
   const actions = actionData?.data.actions || [];
   const revertAction = actions.find((item) => item.name.includes("revert")) as
     | { name: RevertTypes }
     | undefined;
 
-  console.log("action Data", actionData);
+  // console.log("action Data", actionData);
 
   if (isLoading && !data) return <>LOADING!</>;
 
@@ -141,15 +149,19 @@ function RouteComponent() {
           <FileOverwrite submission_id={id} />
         )}
       </div>
-      <Doc url={file?.url || ""} />
+      <Doc url={file?.url || ""} checkListItems={checkListItems} />
     </div>
   );
 }
+
 type DocProps = {
   url: string;
+  checkListItems?: CheckListItem[];
 };
 
-const Doc = ({ url }: DocProps) => {
+const Doc = ({ url, checkListItems }: DocProps) => {
+  // const [checkListState, setCheckListState] = useState(checkListItems);
+  // console.log("checkListState", checkListState);
   return (
     <div>
       <DocViewer
@@ -177,57 +189,51 @@ const Doc = ({ url }: DocProps) => {
           // border: "2px solid red",
         }}
       />
-      <Accordion
-        type="single"
-        collapsible
-        className="absolute right-0 bottom-0 border w-[20rem] rounded-2xl bg-blue-400"
-      >
-        <AccordionItem value="item-1">
-          <AccordionTrigger className="p-4 text-white">
-            Checklist
-          </AccordionTrigger>
-          <AccordionContent className="m-[2px] bg-white rounded-[14px] p-4 flex flex-col gap-4">
-            <div className="flex gap-2">
-              <Checkbox id="term_1" />
-              <Label htmlFor="term_1">Lorem ipsum dolor sit amet</Label>
-            </div>
-            <div className="flex gap-2">
-              <Checkbox id="term_2" />
-              <Label htmlFor="term_2">Lorem ipsum dolor sit amet</Label>
-            </div>
-            <div className="flex gap-2">
-              <Checkbox id="term_3" />
-              <Label htmlFor="term_3">Lorem ipsum dolor sit amet</Label>
-            </div>
-            <div className="flex gap-2">
-              <Checkbox id="term_4" />
-              <Label htmlFor="term_4">Lorem ipsum dolor sit amet</Label>
-            </div>
-            <div className="flex gap-2">
-              <Checkbox id="term_5" />
-              <Label htmlFor="term_5" className=" text-sm/[20px]">
-                Consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-                labore et dolore magna aliqua.
-              </Label>
-            </div>
-            <div className="flex gap-2">
-              <Checkbox id="term_6" />
-              <Label htmlFor="term_6">Lorem ipsum dolor sit amet</Label>
-            </div>
-            <div className="flex gap-2">
-              <Checkbox id="term_7" />
-              <Label htmlFor="term_7">Lorem ipsum dolor sit amet</Label>
-            </div>
-            <div className="flex gap-2">
-              <Checkbox id="term_8" />
-              <Label htmlFor="term_8">Lorem ipsum dolor sit amet</Label>
-            </div>
-          </AccordionContent>
-        </AccordionItem>
-      </Accordion>
+      {checkListItems?.length && (
+        <Accordion
+          type="single"
+          collapsible
+          className="absolute right-0 bottom-0 border w-[20rem] rounded-2xl bg-blue-400"
+        >
+          <AccordionItem value="item-1">
+            <AccordionTrigger className="p-4 text-white">
+              Checklist
+            </AccordionTrigger>
+            <AccordionContent className="m-[2px] bg-white rounded-[14px] p-4 flex flex-col gap-4">
+              {checkListItems?.map((item) => (
+                <div className="flex gap-2">
+                  <Checkbox
+                    id={item.item}
+                    // checked={item.checked}
+                    onCheckedChange={() => {
+                      // const newState = checkListState.map((chk, idx) =>
+                      //   idx === index
+                      //     ? { ...chk, checked: value as boolean }
+                      //     : chk
+                      // );
+                      // setCheckListState(newState);
+                    }}
+                  />
+                  <Label htmlFor={item.item}>{item.item}</Label>
+                </div>
+              ))}
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
+      )}
     </div>
   );
 };
+
+// const Checklist = ({
+//   form,
+//   checkListItems,
+// }: {
+//   checkListItems?: CheckListItem[];
+//   form: UseFormReturn<z.infer<typeof checkListSchema>>;
+// }) => {
+//   return <div></div>;
+// };
 
 // const MoreActions = ({
 //   actions,
@@ -558,6 +564,7 @@ export function ReviewerListForm({
     </Form>
   );
 }
+
 type PublishManuscriptProps = {
   submission_id: string;
 };
