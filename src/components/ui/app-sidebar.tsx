@@ -16,6 +16,8 @@ import { twMerge } from "tailwind-merge";
 import { LogOut } from "lucide-react";
 import { Button } from "./button";
 import { useAuthContext } from "@/context/AuthContext";
+import { useQuery } from "@tanstack/react-query";
+import { userQueryOptions } from "@/lib/query_and_mutations/user/useGetUser";
 
 type AppSidebarProps = {
   links: SidebarLinks[];
@@ -85,10 +87,33 @@ const SidebarHeaderContent = () => {
   );
 };
 const SidebarFooterContent = () => {
-  const { logout } = useAuthContext();
+  const { logout, getTokenPayload } = useAuthContext();
+  const userPayload = getTokenPayload();
+  const { data, isLoading } = useQuery(
+    userQueryOptions({
+      id: userPayload?.user_id || "",
+      role: userPayload?.role_name || "",
+    })
+  );
+  console.log(data);
+  if (!data || isLoading) {
+    return <div className="p-4">Loading...</div>;
+  }
   return (
     <div className="p-4 flex items-center border-t border-[#E9EAEB] justify-between">
-      <div className="h-[40px] w-[40px] rounded-full bg-red-900"></div>
+      <div className="flex items-center gap-3">
+        <div className="h-[40px] w-[40px] rounded-full overflow-auto">
+          <img
+            src={data?.profile_photo?.url ?? ""}
+            alt=""
+            className="w-full h-full"
+          />
+        </div>
+        <div>
+          <div className="text-sm font-medium">{data?.name}</div>
+          <div className="text-xs text-gray-500">{data?.email}</div>
+        </div>
+      </div>
       <Button variant={"outline"} onClick={logout} title="Logout">
         <LogOut className="text-red-700" />
       </Button>

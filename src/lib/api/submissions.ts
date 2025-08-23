@@ -17,6 +17,8 @@ type Submission = {
   status: {
     name: string;
     label: string;
+    text: string;
+    background: string;
   };
   created_at: number;
   updated_at: number;

@@ -6,13 +6,21 @@ import {
   type ReactNode,
 } from "react";
 import { type UserData } from "@/lib/api/authSendOTP";
+import { jwtDecode } from "jwt-decode";
 // import { AuthResponse } from "../api/authApi";
+
+export type TeamJWTPayload = {
+  user_id: string;
+  role_name: string;
+  exp: number;
+};
 
 export interface AuthContextType {
   user: UserData | null;
   setAuthData: (data: UserData) => void;
   logout: () => void;
   isAuthenticated: () => boolean;
+  getTokenPayload: () => TeamJWTPayload | null;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -43,6 +51,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     return !!user;
   };
 
+  const tokenPayload = () => {
+    if (!user?.token) return null;
+    return jwtDecode<TeamJWTPayload>(user.token);
+  };
+
   const logout = () => {
     setUser(null);
     localStorage.removeItem("authUser");
@@ -50,7 +63,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   return (
     <AuthContext.Provider
-      value={{ user, setAuthData, logout, isAuthenticated }}
+      value={{
+        user,
+        setAuthData,
+        logout,
+        isAuthenticated,
+        getTokenPayload: tokenPayload,
+      }}
     >
       {children}
     </AuthContext.Provider>

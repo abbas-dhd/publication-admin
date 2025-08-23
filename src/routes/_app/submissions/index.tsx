@@ -1,4 +1,5 @@
 import { DataTable } from "@/components/CustomTable";
+import StatusBadge from "@/components/ui/statusBadge";
 import type { SubmissionData } from "@/lib/api/submissions";
 import { allSubmissionOptions } from "@/lib/query_and_mutations/submission/getAllSubmissions";
 import { useQuery } from "@tanstack/react-query";
@@ -61,7 +62,12 @@ const columns: ColumnDef<SubmissionData>[] = [
     header: () => <span className="px-[2rem]">Status</span>,
     cell: ({ row }) => (
       <span className="px-[2rem]">
-        {row.original.submission.status?.label ?? "N/A"}
+        {/* {row.original.submission.status?.label ?? "N/A"} */}
+        <StatusBadge
+          statusText={row.original.submission.status?.label}
+          backgroundColor={row.original.submission.status.background}
+          textColor={row.original.submission.status.text}
+        />
       </span>
     ),
   },

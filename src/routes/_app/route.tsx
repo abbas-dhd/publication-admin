@@ -1,4 +1,5 @@
 import { AppSidebar, type SidebarLinks } from "@/components/ui/app-sidebar";
+import { SidebarTrigger, useSidebar } from "@/components/ui/sidebar";
 import { useAuthContext } from "@/context/AuthContext";
 import { useCrumbs } from "@/hooks/useCrumbs";
 import {
@@ -7,7 +8,14 @@ import {
   Outlet,
   useNavigate,
 } from "@tanstack/react-router";
-import { Home, Slash } from "lucide-react";
+import {
+  FileCheck2,
+  FileDown,
+  Home,
+  PenTool,
+  Slash,
+  Users,
+} from "lucide-react";
 import { useEffect } from "react";
 
 export const Route = createFileRoute("/_app")({
@@ -29,6 +37,7 @@ export const Route = createFileRoute("/_app")({
 function RouteComponent() {
   const authContext = useAuthContext();
   const navigate = useNavigate();
+  const sidebar = useSidebar();
 
   useEffect(() => {
     if (authContext.user === null) {
@@ -45,8 +54,7 @@ function RouteComponent() {
       <AppSidebar links={items} />
       <div className="flex flex-col h-full w-full overflow-auto">
         <div className="py-[18px] px-4 text-sm/[20px] font-semibold  text-[#717680] border-[#E9EAEB] border-b flex items-center gap-1">
-          {/* Publications (BREADCRUMBS WIP) */}
-
+          {!sidebar.open && <SidebarTrigger className="h-[24px] w-[24px]" />}
           {crumbs?.map((item, index) => (
             <>
               <Link to={item.fullPath}>{item?.loaderData?.crumb}</Link>
@@ -59,11 +67,8 @@ function RouteComponent() {
         <main
           className="p-6"
           style={{
-            // border: "2px solid red",
             width: "100%",
             height: "100%",
-
-            // flexShrink: 0,
           }}
         >
           <Outlet />
@@ -84,17 +89,21 @@ const items: SidebarLinks[] = [
   {
     title: "My Team",
     url: { to: "/my-team" },
+    icon: Users,
   },
   {
     title: "Submissions",
     url: { to: "/submissions" },
+    icon: FileDown,
   },
   {
     title: "Prospective Authos",
     url: { to: "/prospective-authors" },
+    icon: PenTool,
   },
   {
     title: "Published Manuscripts",
     url: { to: "/published-manuscripts" },
+    icon: FileCheck2,
   },
 ];
