@@ -114,7 +114,12 @@ const SidebarFooterContent = () => {
           <div className="text-xs text-gray-500">{data?.email}</div>
         </div>
       </div>
-      <Button variant={"outline"} onClick={logout} title="Logout">
+      <Button
+        variant={"outline"}
+        onClick={logout}
+        title="Logout"
+        className="cursor-pointer"
+      >
         <LogOut className="text-red-700" />
       </Button>
     </div>

@@ -1,7 +1,7 @@
 import "./style.css";
 import DocViewer, { DocViewerRenderers } from "@cyntler/react-doc-viewer";
 import { createFileRoute } from "@tanstack/react-router";
-import { ArrowLeft, Redo2 } from "lucide-react";
+import { ArrowLeft, CalendarIcon, Redo2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Accordion } from "@radix-ui/react-accordion";
 import {
@@ -56,6 +56,14 @@ import {
 } from "@/components/ui/select";
 import { FileUploadServer } from "@/components/FileUploadServer";
 import { currentAndNextIssueQueryOption } from "@/lib/query_and_mutations/volume_issue/getCurrentAndNextIssue";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
+import { format } from "date-fns";
+import StatusBadge from "@/components/ui/statusBadge";
 
 export const Route = createFileRoute("/_app/submissions/$id/")({
   component: RouteComponent,
@@ -106,8 +114,15 @@ function RouteComponent() {
           }}
         />
         <div className="w-full">
-          <div className="text-lg/[1.75rem] font-semibold ">
+          <div className="text-lg/[1.75rem] font-semibold flex gap-2">
             {file?.name || "N/A"}
+            <span className="text-xs">
+              <StatusBadge
+                statusText={data?.data.submission.status?.label}
+                backgroundColor={data?.data.submission.status.background}
+                textColor={data?.data.submission.status.text}
+              />
+            </span>
           </div>
           <div className="text-sm/[1.813] text-muted-foreground">
             {data?.data.submission.title}
@@ -189,7 +204,7 @@ const Doc = ({ url, checkListItems }: DocProps) => {
           // border: "2px solid red",
         }}
       />
-      {checkListItems?.length && (
+      {!!checkListItems?.length && (
         <Accordion
           type="single"
           collapsible
@@ -392,6 +407,7 @@ const ReviewersSchema = z.object({
   reviewers: z.array(z.number()).refine((arr) => arr.length === 2, {
     message: "You must select exactly 2 reviewers",
   }),
+  deadline: z.date(),
 });
 
 type ReviewerValues = z.infer<typeof ReviewersSchema>;
@@ -425,6 +441,7 @@ const AssignReviewers = ({ submission_id }: { submission_id: string }) => {
         action_name: "assign_reviewer",
         details: {
           reviewers: form.getValues().reviewers,
+          deadline: form.getValues().deadline.getTime() / 1000,
         },
       });
       form.reset();
@@ -553,6 +570,45 @@ export function ReviewerListForm({
                   />
                 ))}
               </div>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="deadline"
+          render={({ field }) => (
+            <FormItem className="flex flex-col">
+              <FormLabel>Deadline</FormLabel>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <FormControl>
+                    <Button
+                      variant={"outline"}
+                      className={cn(
+                        "pl-3 text-left font-normal w-full",
+                        !field.value && "text-muted-foreground"
+                      )}
+                    >
+                      {field.value ? (
+                        format(field.value, "PPP")
+                      ) : (
+                        <span>Pick a date</span>
+                      )}
+                      <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                    </Button>
+                  </FormControl>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="start">
+                  <Calendar
+                    mode="single"
+                    selected={field.value}
+                    onSelect={field.onChange}
+                    disabled={(date) => date < new Date()}
+                    captionLayout="dropdown"
+                  />
+                </PopoverContent>
+              </Popover>
               <FormMessage />
             </FormItem>
           )}
