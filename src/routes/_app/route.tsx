@@ -97,7 +97,7 @@ const items: SidebarLinks[] = [
     icon: FileDown,
   },
   {
-    title: "Prospective Authos",
+    title: "Prospective Authors",
     url: { to: "/prospective-authors" },
     icon: PenTool,
   },
