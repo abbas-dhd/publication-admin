@@ -457,7 +457,7 @@ const AssignReviewers = ({ submission_id }: { submission_id: string }) => {
       }}
     >
       <DialogTrigger asChild>
-        <Button variant={"success"}>Approve</Button>
+        <Button variant={"success"}>Assing Reviewers</Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>

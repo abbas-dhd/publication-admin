@@ -73,29 +73,17 @@ const columns: ColumnDef<SubmissionData>[] = [
   },
   {
     accessorKey: "author",
-    header: () => <span className="px-[2rem]">Score</span>,
-    cell: () => <span className="px-[2rem]">-</span>,
-  },
-  {
-    accessorKey: "author",
-    header: () => <span className="px-[2rem]">Reviewers</span>,
-    cell: () => <span className="px-[2rem]">-</span>,
-  },
-  {
-    accessorKey: "author",
-    header: () => <span className="px-[2rem]">Deadline</span>,
-    cell: () => <span className="px-[2rem]">-</span>,
-  },
-  {
-    accessorKey: "author",
-    header: () => <span className="px-[2rem]">Editor</span>,
-    cell: () => <span className="px-[2rem]">-</span>,
-  },
-
-  {
-    accessorKey: "author",
-    header: () => <span className="px-[2rem]">Co-Authors</span>,
-    cell: () => <span className="px-[2rem]">-</span>,
+    header: () => <span className="px-[2rem]">Author(s)</span>,
+    cell: ({ row }) => {
+      const author = row.original.author.name;
+      const coAuthors = row.original.coauthors.map((co) => co.name).join(", ");
+      return (
+        <div className="px-[2rem]">
+          <span>{author}</span>
+          {!!row.original.coauthors.length && <span>{coAuthors}</span>}
+        </div>
+      );
+    },
   },
   {
     accessorKey: "author",
@@ -103,7 +91,7 @@ const columns: ColumnDef<SubmissionData>[] = [
     cell: ({ row }) => {
       return (
         <span className="px-[2rem]">
-          {row.original?.submission?.category || "-"}
+          {getArticleLabel(row.original?.submission?.category) || "-"}
         </span>
       );
     },
@@ -117,4 +105,48 @@ const columns: ColumnDef<SubmissionData>[] = [
       return <span className="px-[2rem]">{submitted.toDateString()}</span>;
     },
   },
+  {
+    accessorKey: "author",
+    header: () => <span className="px-[2rem]">Reviewers</span>,
+    // TODO: show reviewers
+    cell: () => <span className="px-[2rem]">-</span>,
+  },
+  {
+    accessorKey: "author",
+    header: () => <span className="px-[2rem]">Deadline</span>,
+    // TODO: show deadline
+    cell: () => <span className="px-[2rem]">-</span>,
+  },
+  {
+    accessorKey: "author",
+    // TODO: show score
+    header: () => <span className="px-[2rem]">Score</span>,
+    cell: () => <span className="px-[2rem]">-</span>,
+  },
+
+  {
+    accessorKey: "author",
+    // TODO: show editor
+    header: () => <span className="px-[2rem]">Editor</span>,
+    cell: () => <span className="px-[2rem]">-</span>,
+  },
+  {
+    accessorKey: "author",
+    // TODO: show date of publication
+    header: () => <span className="px-[2rem]">Date of Publication</span>,
+    cell: () => <span className="px-[2rem]">-</span>,
+  },
 ];
+
+const getArticleLabel = (category: string) => {
+  switch (category) {
+    case "short_article":
+      return "Short Article";
+    case "long_articles":
+      return "Long Article";
+    case "case_notes":
+      return "Case Notes/Legislative Comments";
+    default:
+      return "N/A";
+  }
+};

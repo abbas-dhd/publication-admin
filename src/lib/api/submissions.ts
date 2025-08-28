@@ -5,7 +5,10 @@ export type SubmissionData = {
   submission: Submission;
   manuscripts: Manuscript[];
   author: Author;
-  coauthors: unknown[]; // Change this if you know coauthor structure
+  coauthors: {
+    name: string;
+    email: string;
+  }[]; // Change this if you know coauthor structure
 };
 
 type Submission = {
