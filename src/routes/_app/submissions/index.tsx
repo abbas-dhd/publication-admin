@@ -29,7 +29,7 @@ function RouteComponent() {
 
 const columns: ColumnDef<SubmissionData>[] = [
   {
-    accessorKey: "submisison",
+    accessorKey: "manuscripts",
     header: () => <span className="pr-[2rem]">File</span>,
     cell: ({ row }) => {
       // TODO:  y ugly file parsing logic!
@@ -58,7 +58,7 @@ const columns: ColumnDef<SubmissionData>[] = [
     },
   },
   {
-    accessorKey: "author",
+    accessorKey: "submission",
     header: () => <span className="px-[2rem]">Status</span>,
     cell: ({ row }) => (
       <span className="px-[2rem]">
@@ -78,15 +78,17 @@ const columns: ColumnDef<SubmissionData>[] = [
       const author = row.original.author.name;
       const coAuthors = row.original.coauthors.map((co) => co.name).join(", ");
       return (
-        <div className="px-[2rem]">
+        <div className="px-[2rem] flex flex-col">
           <span>{author}</span>
-          {!!row.original.coauthors.length && <span>{coAuthors}</span>}
+          {!!row.original.coauthors.length && (
+            <span className="text-muted-foreground">{coAuthors}</span>
+          )}
         </div>
       );
     },
   },
   {
-    accessorKey: "author",
+    accessorKey: "submission",
     header: () => <span className="px-[2rem]">Type of Submission</span>,
     cell: ({ row }) => {
       return (
@@ -97,7 +99,7 @@ const columns: ColumnDef<SubmissionData>[] = [
     },
   },
   {
-    accessorKey: "author",
+    accessorKey: "submission",
     header: () => <span className="px-[2rem]">Submitted on</span>,
     cell: ({ row }) => {
       const submitted = new Date(row.original.submission.created_at * 1000);
