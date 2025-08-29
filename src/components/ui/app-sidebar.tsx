@@ -89,16 +89,16 @@ const SidebarHeaderContent = () => {
 const SidebarFooterContent = () => {
   const { logout, getTokenPayload } = useAuthContext();
   const userPayload = getTokenPayload();
-  const { data, isLoading } = useQuery(
+  const { data } = useQuery(
     userQueryOptions({
       id: userPayload?.user_id || "",
       role: userPayload?.role_name || "",
     })
   );
   console.log(data);
-  if (!data || isLoading) {
-    return <div className="p-4">Loading...</div>;
-  }
+  // if (!data || isLoading) {
+  //   return <div className="p-4">Loading...</div>;
+  // }
   return (
     <div className="p-4 flex items-center border-t border-[#E9EAEB] justify-between">
       <div className="flex items-center gap-3">
