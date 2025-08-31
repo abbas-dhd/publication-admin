@@ -11,20 +11,18 @@ export const Route = createFileRoute("/_author")({
   beforeLoad: async ({ context }) => {
     const { auth } = context;
 
-    if (
-      auth &&
-      auth.isAuthenticated() &&
-      auth.getTokenPayload()?.role_name === "author"
-    ) {
+    if (!auth?.isAuthenticated()) {
+      console.log("User not authenticated");
+      throw redirect({ to: "/" });
+    }
+
+    const role = auth.getTokenPayload()?.role_name;
+
+    if (role === "author") {
       console.log("Looks good");
     } else {
       console.log("User not authenticated");
-      if (auth && auth.isAuthenticated()) {
-        throw notFound();
-      } else
-        throw redirect({
-          to: "/",
-        });
+      throw notFound();
     }
   },
 });
