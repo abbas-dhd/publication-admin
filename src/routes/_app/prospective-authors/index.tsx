@@ -24,6 +24,7 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import type { ProspectAuthor } from "@/lib/api/prospect-author";
+import { BULK_SHEET_SAMPLE_URL } from "@/lib/contants";
 import { useAddProspect } from "@/lib/query_and_mutations/prospect-author/useAddProspect";
 import { useBulkUpload } from "@/lib/query_and_mutations/prospect-author/useBulkUpload";
 import { useCallForPaper } from "@/lib/query_and_mutations/prospect-author/useCallForPaper";
@@ -34,7 +35,14 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import type { ColumnDef } from "@tanstack/react-table";
-import { Megaphone, Pencil, PlusIcon, Trash2, Upload } from "lucide-react";
+import {
+  Download,
+  Megaphone,
+  Pencil,
+  PlusIcon,
+  Trash2,
+  Upload,
+} from "lucide-react";
 import { useCallback, useMemo, useState } from "react";
 import { useForm, type UseFormReturn } from "react-hook-form";
 import { toast } from "sonner";
@@ -615,6 +623,16 @@ const BulkImportModal = () => {
           <DialogDescription>
             Please update the title and description of the form before you
             notify prospects.
+            <a
+              href={BULK_SHEET_SAMPLE_URL}
+              target="_blank"
+              rel="noreferrer"
+              className="underline ml-1 hover:text-primary"
+            >
+              <span className="flex items-center gap-1">
+                Sample Data <Download className="h-4" />
+              </span>
+            </a>
           </DialogDescription>
         </DialogHeader>
         <FileUploadServer name="file" control={form.control} />

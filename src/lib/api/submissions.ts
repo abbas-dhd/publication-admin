@@ -1,10 +1,13 @@
 import { SERVER_API } from "../contants";
-import type { UserFile } from "./users";
+import type { UserData, UserFile } from "./users";
 
 export type SubmissionData = {
   submission: Submission;
   manuscripts: Manuscript[];
   author: Author;
+  avg_score: number | null;
+  reviewers: UserData[];
+  editors: UserData[];
   coauthors: {
     name: string;
     email: string;

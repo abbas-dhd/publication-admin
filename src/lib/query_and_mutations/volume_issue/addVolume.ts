@@ -18,6 +18,7 @@ export const useAddVolume = <
 ) => {
   const queryClient = useQueryClient();
   return useMutation<TResponse, TError, TVariables>({
+    ...options,
     mutationFn: (data: TVariables) => addVolume<TResponse>(data),
     onSuccess: (data, variables, context) => {
       queryClient.invalidateQueries({
@@ -25,7 +26,5 @@ export const useAddVolume = <
       });
       options?.onSuccess?.(data, variables, context);
     },
-
-    ...options,
   });
 };

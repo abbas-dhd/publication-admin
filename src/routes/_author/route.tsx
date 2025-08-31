@@ -1,25 +1,27 @@
 import { AppSidebar, type SidebarLinks } from "@/components/ui/app-sidebar";
-import { useAuthContext } from "@/context/AuthContext";
-import { createFileRoute, Outlet } from "@tanstack/react-router";
-import { useEffect } from "react";
+import { createFileRoute, Outlet, notFound } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/_author")({
   component: RouteComponent,
+  beforeLoad: async ({ context }) => {
+    const { auth } = context;
+
+    if (
+      auth &&
+      auth.isAuthenticated() &&
+      auth.getTokenPayload()?.role_name === "author"
+    ) {
+      console.log("Looks good");
+    } else {
+      console.log("User not authenticated");
+      throw notFound();
+    }
+  },
 });
 
 function RouteComponent() {
-  const navigate = Route.useNavigate();
-  const authContext = useAuthContext();
-
   // TODO: Add check to only show this if author is logged in
 
-  useEffect(() => {
-    if (authContext.user === null) {
-      navigate({
-        to: "/login",
-      });
-    }
-  });
   return (
     <>
       <AppSidebar links={items} />

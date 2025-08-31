@@ -8,12 +8,14 @@ export type VolumeRequst = {
 
 export type VolumeResponse = {
   message: string;
-  data: {
-    volume_id: string;
-    title: string;
-    description: string;
-    created_at: string;
-  };
+  data: Volume;
+};
+
+export type Volume = {
+  id: string;
+  title: string;
+  description: string;
+  created_at: string;
 };
 
 export const addVolume = async <TResponse = VolumeResponse>(
@@ -32,13 +34,59 @@ export const addVolume = async <TResponse = VolumeResponse>(
 
   if (!response.ok) {
     const errorData = await response.json();
-    throw new Error(errorData.message || "Authentication failed");
+    throw new Error(errorData.message || "Something Went Wrong");
   }
 
   return response.json();
 };
 
-export type IssueRequest = {
+export const updateVolume = async <TResponse = VolumeResponse>(
+  data: VolumeRequst & { volume_id: string }
+): Promise<TResponse> => {
+  const { token } = JSON.parse(localStorage.getItem("authUser") || "");
+
+  const response = await fetch(`${SERVER_API}/api/volume/update/`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "content-type": "application/json",
+    },
+    body: JSON.stringify(data),
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.message || "Something Went Wrong");
+  }
+
+  return response.json();
+};
+
+export const deleteVolume = async <TResponse = VolumeResponse>(data: {
+  volume_id: string;
+}): Promise<TResponse> => {
+  const { token } = JSON.parse(localStorage.getItem("authUser") || "");
+  const url = new URL(`${SERVER_API}/api/volume/delete/`);
+  url.searchParams.append("volume_id", data.volume_id);
+
+  const response = await fetch(url, {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "content-type": "application/json",
+    },
+    // body: JSON.stringify(data),
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.message || "Something Went Wrong");
+  }
+
+  return response.json();
+};
+
+export type NewIssueRequest = {
   title: string; // required
   thumbnail: UserFile; // optional
   start_date: string; // required
@@ -49,15 +97,7 @@ export type IssueRequest = {
 
 export type IssueResponse = {
   message: string;
-  data: {
-    issue_id: string;
-    title: string;
-    thumbnail: UserFile;
-    start_date: string;
-    end_date: string;
-    description: string;
-    volume_id: string;
-  };
+  data: Issue;
 };
 
 // TODO: create a common type for all issues and volumes
@@ -72,7 +112,7 @@ export type Issue = {
 };
 
 export const addIssue = async <TResponse = IssueResponse>(
-  data: IssueRequest
+  data: NewIssueRequest
 ): Promise<TResponse> => {
   const { token } = JSON.parse(localStorage.getItem("authUser") || "");
 
@@ -87,7 +127,54 @@ export const addIssue = async <TResponse = IssueResponse>(
 
   if (!response.ok) {
     const errorData = await response.json();
-    throw new Error(errorData.message || "Authentication failed");
+    throw new Error(errorData.message || "Something Went Wrong");
+  }
+
+  return response.json();
+};
+
+export const updateIssue = async <TResponse = IssueResponse>(
+  data: Issue
+): Promise<TResponse> => {
+  const { token } = JSON.parse(localStorage.getItem("authUser") || "");
+
+  const response = await fetch(`${SERVER_API}/api/issue/update/`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "content-type": "application/json",
+    },
+    // TODO: Temp fix
+    body: JSON.stringify({ ...data, issue_id: data.id }),
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.message || "Something Went Wrong");
+  }
+
+  return response.json();
+};
+
+export const deleteIssue = async <TResponse = IssueResponse>(data: {
+  issue_id: string;
+}): Promise<TResponse> => {
+  const { token } = JSON.parse(localStorage.getItem("authUser") || "");
+  const url = new URL(`${SERVER_API}/api/issue/delete/`);
+  url.searchParams.append("issue_id", data.issue_id);
+
+  const response = await fetch(url, {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "content-type": "application/json",
+    },
+    // body: JSON.stringify(data),
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.message || "Something Went Wrong");
   }
 
   return response.json();
@@ -95,12 +182,7 @@ export const addIssue = async <TResponse = IssueResponse>(
 
 export type VolumesResponse = {
   message: string;
-  data: {
-    id: string;
-    title: string;
-    dsescription: string;
-    created_at: string;
-  }[];
+  data: Volume[];
 };
 
 export const getAllVolumes = async <
@@ -120,7 +202,7 @@ export const getAllVolumes = async <
 
   if (!response.ok) {
     const errorData = await response.json();
-    throw new Error(errorData.message || "Authentication failed");
+    throw new Error(errorData.message || "Something Went Wrong");
   }
 
   return response.json();
@@ -128,15 +210,7 @@ export const getAllVolumes = async <
 
 export type IssuesResponse = {
   message: string;
-  data: {
-    id: string;
-    title: string;
-    thumbnail: UserFile;
-    start_date: string;
-    end_date: string;
-    description: string;
-    volume_id: string;
-  }[];
+  data: Issue[];
 };
 
 export const getAllIssues = async <TResponse = IssuesResponse>({
@@ -159,11 +233,13 @@ export const getAllIssues = async <TResponse = IssuesResponse>({
 
   if (!response.ok) {
     const errorData = await response.json();
-    throw new Error(errorData.message || "Authentication failed");
+    throw new Error(errorData.message || "Something Went Wrong");
   }
 
   return response.json();
 };
+
+// Manuscripts
 
 export type Manuscript = {
   id: string;
@@ -208,7 +284,7 @@ export const getAllManuscripts = async <TResponse = ManuscriptResponse>({
 
   if (!response.ok) {
     const errorData = await response.json();
-    throw new Error(errorData.message || "Authentication failed");
+    throw new Error(errorData.message || "Something Went Wrong");
   }
 
   return response.json();
@@ -237,7 +313,7 @@ export const getCurrentAndNextIssue = async <
 
   if (!response.ok) {
     const errorData = await response.json();
-    throw new Error(errorData.message || "Authentication failed");
+    throw new Error(errorData.message || "Something Went Wrong");
   }
 
   return response.json();

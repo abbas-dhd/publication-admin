@@ -3,7 +3,7 @@ import { queryOptions } from "@tanstack/react-query";
 
 export function allIssuesQueryOptions(data: { volume_id: string }) {
   return queryOptions({
-    queryKey: ["allissues"],
+    queryKey: ["allIssues"],
     queryFn: () => getAllIssues(data),
   });
 }

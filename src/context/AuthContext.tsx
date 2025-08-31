@@ -26,7 +26,19 @@ export interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<UserData | null>(null);
+  const [user, setUser] = useState<UserData | null>(() => {
+    // initialize from localStorage on first render
+    const storedUser = localStorage.getItem("authUser");
+    if (storedUser) {
+      try {
+        return JSON.parse(storedUser) as UserData;
+      } catch (error) {
+        console.error("Failed to parse stored user:", error);
+        localStorage.removeItem("authUser");
+      }
+    }
+    return null;
+  });
 
   useEffect(() => {
     const storedUser = localStorage.getItem("authUser");

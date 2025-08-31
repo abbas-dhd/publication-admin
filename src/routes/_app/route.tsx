@@ -1,12 +1,11 @@
 import { AppSidebar, type SidebarLinks } from "@/components/ui/app-sidebar";
 import { SidebarTrigger, useSidebar } from "@/components/ui/sidebar";
-import { useAuthContext } from "@/context/AuthContext";
 import { useCrumbs } from "@/hooks/useCrumbs";
 import {
   createFileRoute,
   Link,
   Outlet,
-  useNavigate,
+  redirect,
 } from "@tanstack/react-router";
 import {
   FileCheck2,
@@ -16,36 +15,28 @@ import {
   Slash,
   Users,
 } from "lucide-react";
-import { useEffect } from "react";
 
 export const Route = createFileRoute("/_app")({
   component: RouteComponent,
   beforeLoad: async ({ context }) => {
-    // console.log(context, "hahaha");
-
     const { auth } = context;
-    if (auth && auth.isAuthenticated()) {
+
+    if (
+      auth &&
+      auth.isAuthenticated() &&
+      auth.getTokenPayload()?.role_name !== "author"
+    ) {
       console.log("Looks good");
     } else {
-      console.log("something is wrong");
+      console.log("User not authenticated");
+      throw redirect({ to: "/login" });
     }
-
-    // TODO: FIX AUTH CONTEXT ON BEFORE LOAD
   },
 });
 
 function RouteComponent() {
-  const authContext = useAuthContext();
-  const navigate = useNavigate();
   const sidebar = useSidebar();
 
-  useEffect(() => {
-    if (authContext.user === null) {
-      navigate({
-        to: "/login",
-      });
-    }
-  }, [authContext.user, navigate]);
   const crumbs = useCrumbs();
   // console.log(crumbs);
 

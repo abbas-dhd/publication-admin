@@ -95,7 +95,7 @@ const SidebarFooterContent = () => {
       role: userPayload?.role_name || "",
     })
   );
-  console.log(data);
+
   // if (!data || isLoading) {
   //   return <div className="p-4">Loading...</div>;
   // }

@@ -18,6 +18,13 @@ const router = createRouter({
   context: {
     auth: null,
   },
+  defaultNotFoundComponent: () => {
+    return (
+      <div className="h-screen w-full flex justify-center items-center">
+        <p>404 Not found!</p>
+      </div>
+    );
+  },
 });
 
 // Register the router instance for type safety

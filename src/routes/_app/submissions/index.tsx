@@ -111,7 +111,18 @@ const columns: ColumnDef<SubmissionData>[] = [
     accessorKey: "author",
     header: () => <span className="px-[2rem]">Reviewers</span>,
     // TODO: show reviewers
-    cell: () => <span className="px-[2rem]">-</span>,
+    cell: ({ row }) => {
+      const reviewers = row.original.reviewers.map((rev) => rev.name);
+      return reviewers.length === 0 ? (
+        <span className="px-[2rem] text-muted-foreground">N/A</span>
+      ) : (
+        <div className="px-[2rem] flex flex-col">
+          {reviewers.map((rev) => (
+            <span>{rev}</span>
+          ))}
+        </div>
+      );
+    },
   },
   {
     accessorKey: "author",
@@ -123,14 +134,29 @@ const columns: ColumnDef<SubmissionData>[] = [
     accessorKey: "author",
     // TODO: show score
     header: () => <span className="px-[2rem]">Score</span>,
-    cell: () => <span className="px-[2rem]">-</span>,
+    cell: ({ row }) => (
+      <span className="px-[2rem]">
+        {row.original.avg_score ?? "Not Graded"}
+      </span>
+    ),
   },
 
   {
     accessorKey: "author",
     // TODO: show editor
     header: () => <span className="px-[2rem]">Editor</span>,
-    cell: () => <span className="px-[2rem]">-</span>,
+    cell: ({ row }) => {
+      const editors = row.original.editors.map((ed) => ed.name);
+      return editors.length === 0 ? (
+        <span className="px-[2rem] text-muted-foreground">N/A</span>
+      ) : (
+        <div className="px-[2rem] flex flex-col">
+          {editors.map((ed) => (
+            <span>{ed}</span>
+          ))}
+        </div>
+      );
+    },
   },
   {
     accessorKey: "author",
