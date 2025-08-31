@@ -1,5 +1,10 @@
 import { AppSidebar, type SidebarLinks } from "@/components/ui/app-sidebar";
-import { createFileRoute, Outlet, notFound } from "@tanstack/react-router";
+import {
+  createFileRoute,
+  Outlet,
+  notFound,
+  redirect,
+} from "@tanstack/react-router";
 
 export const Route = createFileRoute("/_author")({
   component: RouteComponent,
@@ -14,7 +19,12 @@ export const Route = createFileRoute("/_author")({
       console.log("Looks good");
     } else {
       console.log("User not authenticated");
-      throw notFound();
+      if (auth && auth.isAuthenticated()) {
+        throw notFound();
+      } else
+        throw redirect({
+          to: "/",
+        });
     }
   },
 });
