@@ -69,7 +69,9 @@ export type ActionPayload =
       action_name: "assign_reviewer";
       details: {
         reviewers: number[];
-        deadline: number;
+        reviewer_deadline: {
+          [key: number]: number;
+        };
       };
     }
   | {

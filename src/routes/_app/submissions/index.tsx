@@ -127,8 +127,21 @@ const columns: ColumnDef<SubmissionData>[] = [
   {
     accessorKey: "author",
     header: () => <span className="px-[2rem]">Deadline</span>,
-    // TODO: show deadline
-    cell: () => <span className="px-[2rem]">-</span>,
+
+    cell: ({ row }) => {
+      const deadlines = row.original.reviewers.map(
+        (rev) => new Date(rev.deadline * 1000)
+      );
+      return deadlines.length === 0 ? (
+        <span className="px-[2rem] text-muted-foreground">N/A</span>
+      ) : (
+        <div className="px-[2rem] flex flex-col">
+          {deadlines.map((deadline) => (
+            <span>{deadline.toDateString()}</span>
+          ))}
+        </div>
+      );
+    },
   },
   {
     accessorKey: "author",

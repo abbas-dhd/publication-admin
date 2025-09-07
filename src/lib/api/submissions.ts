@@ -1,12 +1,16 @@
 import { SERVER_API } from "../contants";
 import type { UserData, UserFile } from "./users";
 
+type Reviewer = UserData & {
+  deadline: number;
+};
+
 export type SubmissionData = {
   submission: Submission;
   manuscripts: Manuscript[];
   author: Author;
   avg_score: number | null;
-  reviewers: UserData[];
+  reviewers: Reviewer[];
   editors: UserData[];
   coauthors: {
     name: string;

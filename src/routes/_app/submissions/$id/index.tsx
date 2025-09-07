@@ -1,7 +1,7 @@
 import "./style.css";
 import DocViewer, { DocViewerRenderers } from "@cyntler/react-doc-viewer";
 import { createFileRoute } from "@tanstack/react-router";
-import { ArrowLeft, CalendarIcon, Redo2 } from "lucide-react";
+import { ArrowLeft, CalendarIcon, Ellipsis, Redo2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Accordion } from "@radix-ui/react-accordion";
 import {
@@ -130,38 +130,48 @@ function RouteComponent() {
         </div>
         {/* TODO: Add condition before pushing */}
 
+        <Popover>
+          <PopoverTrigger className="py-2 px-4 rounded-md border">
+            <Ellipsis className="h-5 w-5" />
+          </PopoverTrigger>
+          <PopoverContent className="w-fit flex flex-col p-2">
+            {actions.find((item) => item.name === "assign_reviewer") && (
+              <AssignReviewers submission_id={id} />
+            )}
+            {actions.find((item) => item.name === "assign_editor") && (
+              // {/* use it in badge*/}
+              <AssignEditor submission_id={id} />
+            )}
+            {actions.find((item) => item.name === "payment_pending") && (
+              <RC_SendPaymentLink submission_id={id} />
+              //  {/* use it in badge*/}
+            )}
+            {actions.find((item) => item.name === "payment_done") && (
+              <RC_MarkPaymentDone submission_id={id} />
+              // {/* use it in badge*/}
+            )}
+            {actions.find((item) => item.name === "overwrite") && (
+              <FileOverwrite submission_id={id} />
+            )}
+            {actions.some((action) => action.name === "reject") && (
+              <RejectModal submission_id={id} />
+            )}
+          </PopoverContent>
+        </Popover>
+
         {revertAction && (
           <RevertToAuthor submission_id={id} revertType={revertAction.name} />
-        )}
-        {actions.some((action) => action.name === "reject") && (
-          <RejectModal submission_id={id} />
-        )}
-        {actions.find((item) => item.name === "assign_reviewer") && (
-          <AssignReviewers submission_id={id} />
         )}
         {actions.find((item) => item.name === "partial_ready_to_publish") && (
           <PublishManuscript submission_id={id} />
         )}
-        {actions.find((item) => item.name === "assign_editor") && (
-          // {/* use it in badge*/}
-          <AssignEditor submission_id={id} />
-        )}
+
         {actions.find((item) => item.name === "final_ready_to_publish") && (
           <EditorReadyToPublish submission_id={id} />
         )}
-        {actions.find((item) => item.name === "payment_pending") && (
-          <RC_SendPaymentLink submission_id={id} />
-          //  {/* use it in badge*/}
-        )}
-        {actions.find((item) => item.name === "payment_done") && (
-          <RC_MarkPaymentDone submission_id={id} />
-          // {/* use it in badge*/}
-        )}
+
         {actions.find((item) => item.name === "publish") && (
           <RC_Publish submission_id={id} />
-        )}
-        {actions.find((item) => item.name === "overwrite") && (
-          <FileOverwrite submission_id={id} />
         )}
       </div>
       <Doc url={file?.url || ""} checkListItems={checkListItems} />
@@ -239,16 +249,6 @@ const Doc = ({ url, checkListItems }: DocProps) => {
     </div>
   );
 };
-
-// const Checklist = ({
-//   form,
-//   checkListItems,
-// }: {
-//   checkListItems?: CheckListItem[];
-//   form: UseFormReturn<z.infer<typeof checkListSchema>>;
-// }) => {
-//   return <div></div>;
-// };
 
 // const MoreActions = ({
 //   actions,
@@ -436,12 +436,20 @@ const AssignReviewers = ({ submission_id }: { submission_id: string }) => {
 
   const confirmApprove = () => {
     if (form.formState.isValid) {
+      const reviewers = form.getValues().reviewers;
+      const deadline = form.getValues().deadline.getTime() / 1000;
+      const reviewer_deadline: { [key: number]: number } = {};
+
+      reviewers.forEach((rev) => {
+        reviewer_deadline[rev] = deadline;
+      });
+
       mutate({
         submission_id,
         action_name: "assign_reviewer",
         details: {
-          reviewers: form.getValues().reviewers,
-          deadline: form.getValues().deadline.getTime() / 1000,
+          reviewers,
+          reviewer_deadline,
         },
       });
       form.reset();
@@ -457,7 +465,7 @@ const AssignReviewers = ({ submission_id }: { submission_id: string }) => {
       }}
     >
       <DialogTrigger asChild>
-        <Button variant={"success"}>Assing Reviewers</Button>
+        <Button variant={"success"}>Assign Reviewers</Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
