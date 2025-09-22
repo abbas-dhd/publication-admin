@@ -544,7 +544,17 @@ const ReAssignReviewers = ({ submission }: { submission: SubmissionData }) => {
       const deadline = form.getValues().deadline.getTime() / 1000;
       const reviewer_deadline: { [key: number]: number } = {};
 
-      reviewers.forEach((rev) => {
+      
+
+      const reviewerToDelete = checkedReviewers.filter(
+        (rev) => !reviewers.includes(rev)
+      );
+
+      const reviewerToAdd = reviewers.filter(
+        (rev) => !checkedReviewers.includes(rev)
+      );
+
+      reviewerToAdd.forEach((rev) => {
         reviewer_deadline[rev] = deadline;
       });
 
@@ -552,10 +562,8 @@ const ReAssignReviewers = ({ submission }: { submission: SubmissionData }) => {
         submission_id: submission.submission.submission_id,
         action_name: "reassign_reviewer",
         details: {
-          reviewers,
-          reviewer_to_delete: checkedReviewers.filter(
-            (rev) => !reviewers.includes(rev)
-          ),
+          reviewers: reviewerToAdd,
+          reviewer_to_delete: reviewerToDelete,
           reviewer_deadline,
         },
       });
