@@ -79,7 +79,7 @@ export type ActionPayload =
       action_name: "reassign_reviewer";
       details: {
         reviewers: number[];
-        reviewer_to_delete: number[];
+        reviewer_id_to_delete: number[];
         reviewer_deadline: {
           [key: number]: number;
         };

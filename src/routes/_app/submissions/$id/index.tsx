@@ -563,7 +563,7 @@ const ReAssignReviewers = ({ submission }: { submission: SubmissionData }) => {
         action_name: "reassign_reviewer",
         details: {
           reviewers: reviewerToAdd,
-          reviewer_to_delete: reviewerToDelete,
+          reviewer_id_to_delete: reviewerToDelete,
           reviewer_deadline,
         },
       });
