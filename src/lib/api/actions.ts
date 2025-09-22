@@ -76,6 +76,17 @@ export type ActionPayload =
     }
   | {
       submission_id: string;
+      action_name: "reassign_reviewer";
+      details: {
+        reviewers: number[];
+        reviewer_to_delete: number[];
+        reviewer_deadline: {
+          [key: number]: number;
+        };
+      };
+    }
+  | {
+      submission_id: string;
       action_name: "partial_ready_to_publish";
       details: {
         score: number;

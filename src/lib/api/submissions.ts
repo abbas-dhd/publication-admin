@@ -1,8 +1,12 @@
 import { SERVER_API } from "../contants";
-import type { UserData, UserFile } from "./users";
+import type { UserData, UserDataWithId, UserFile } from "./users";
 
-type Reviewer = UserData & {
+export type Reviewer = UserDataWithId & {
   deadline: number;
+  is_available: boolean;
+  // TODO: change it to enum
+  last_action: string | null;
+  last_status: string | null;
 };
 
 export type SubmissionData = {

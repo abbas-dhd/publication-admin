@@ -64,6 +64,7 @@ import {
 import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
 import StatusBadge from "@/components/ui/statusBadge";
+import type { SubmissionData } from "@/lib/api/submissions";
 
 export const Route = createFileRoute("/_app/submissions/$id/")({
   component: RouteComponent,
@@ -153,6 +154,18 @@ function RouteComponent() {
             {actions.find((item) => item.name === "overwrite") && (
               <FileOverwrite submission_id={id} />
             )}
+            <Button variant={"ghost"} asChild>
+              <a
+                href="https://pub-c20cf6f0c5614055b150956b8e2eb462.r2.dev/Undertaking.pdf"
+                target="_blank"
+                rel="noreferrer"
+              >
+                Download Undertaking
+              </a>
+            </Button>
+            {actions.find((item) => item.name === "reassign_reviewer") &&
+              data?.data && <ReAssignReviewers submission={data.data} />}
+
             {actions.some((action) => action.name === "reject") && (
               <RejectModal submission_id={id} />
             )}
@@ -498,12 +511,112 @@ const AssignReviewers = ({ submission_id }: { submission_id: string }) => {
   );
 };
 
+const ReAssignReviewers = ({ submission }: { submission: SubmissionData }) => {
+  const { mutate } = useCallAction();
+
+  const [isModalOpen, setIsModalOpen] = useState<boolean>();
+
+  const { data, error, isLoading, refetch } = useQuery(
+    allUsersQueryOptions({ enabled: false })
+  );
+
+  useEffect(() => {
+    if (isModalOpen) {
+      refetch();
+    }
+  }, [isModalOpen, refetch]);
+
+  const checkedReviewers = submission.reviewers.map((rev) => rev.user_id);
+  const disabledUserIds = submission.reviewers
+    .filter((rev) => rev.last_action === "partial_ready_to_publish")
+    .map((rev) => rev.user_id);
+
+  const form = useForm<ReviewerValues>({
+    resolver: zodResolver(ReviewersSchema),
+    defaultValues: {
+      reviewers: checkedReviewers,
+    },
+  });
+
+  const confirmApprove = () => {
+    if (form.formState.isValid) {
+      const reviewers = form.getValues().reviewers;
+      const deadline = form.getValues().deadline.getTime() / 1000;
+      const reviewer_deadline: { [key: number]: number } = {};
+
+      reviewers.forEach((rev) => {
+        reviewer_deadline[rev] = deadline;
+      });
+
+      mutate({
+        submission_id: submission.submission.submission_id,
+        action_name: "reassign_reviewer",
+        details: {
+          reviewers,
+          reviewer_to_delete: checkedReviewers.filter(
+            (rev) => !reviewers.includes(rev)
+          ),
+          reviewer_deadline,
+        },
+      });
+      form.reset();
+    }
+  };
+
+  if (error) return <p>{error.message}</p>;
+
+  return (
+    <Dialog
+      onOpenChange={(value) => {
+        setIsModalOpen(value);
+      }}
+    >
+      <DialogTrigger asChild>
+        <Button variant={"ghost"}>Re Assign Reviewers</Button>
+      </DialogTrigger>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Re Assign Reviewers</DialogTitle>
+          <DialogDescription>
+            Choose 2 Reviewers to assign the Manuscript to
+          </DialogDescription>
+        </DialogHeader>
+        {isLoading && <p>Loading</p>}
+        <ReviewerListForm
+          reviewers={data?.data.reviewers || []}
+          form={form}
+          disabledUserIds={disabledUserIds}
+        />
+        <DialogFooter className="sm:justify-end">
+          <DialogClose asChild>
+            <Button type="button" variant="secondary" className="border">
+              Cancel
+            </Button>
+          </DialogClose>
+          <DialogClose asChild>
+            <Button
+              type="button"
+              variant="default"
+              onClick={confirmApprove}
+              disabled={!form.formState.isValid}
+            >
+              Re Assign
+            </Button>
+          </DialogClose>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+};
+
 export function ReviewerListForm({
   form,
   reviewers,
+  disabledUserIds = [],
 }: {
   form: UseFormReturn<z.infer<typeof ReviewersSchema>>;
   reviewers: UserDataWithId[];
+  disabledUserIds?: number[];
 }) {
   return (
     <Form {...form}>
@@ -529,6 +642,9 @@ export function ReviewerListForm({
                         >
                           <FormControl>
                             <Checkbox
+                              disabled={disabledUserIds.includes(
+                                reviewer.user_id
+                              )}
                               checked={isChecked}
                               onCheckedChange={(checked) => {
                                 if (checked) {
