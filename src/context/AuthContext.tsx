@@ -18,7 +18,7 @@ export type TeamJWTPayload = {
 export interface AuthContextType {
   user: UserData | null;
   setAuthData: (data: UserData) => void;
-  logout: () => void;
+  logout: () => boolean;
   isAuthenticated: () => boolean;
   getTokenPayload: () => TeamJWTPayload | null;
 }
@@ -71,6 +71,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const logout = () => {
     setUser(null);
     localStorage.removeItem("authUser");
+
+    return true
   };
 
   return (

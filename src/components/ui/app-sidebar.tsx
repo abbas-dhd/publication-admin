@@ -116,7 +116,13 @@ const SidebarFooterContent = () => {
       </div>
       <Button
         variant={"outline"}
-        onClick={logout}
+        onClick={() => {
+          const isLogoutSuccess = logout();
+
+          if (isLogoutSuccess) {
+            window.location.reload();
+          }
+        }}
         title="Logout"
         className="cursor-pointer"
       >
