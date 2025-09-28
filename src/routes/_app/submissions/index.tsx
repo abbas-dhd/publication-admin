@@ -65,8 +65,8 @@ const columns: ColumnDef<SubmissionData>[] = [
         {/* {row.original.submission.status?.label ?? "N/A"} */}
         <StatusBadge
           statusText={row.original.submission.status?.label}
-          backgroundColor={row.original.submission.status.background}
-          textColor={row.original.submission.status.text}
+          backgroundColor={row.original.submission.status?.background}
+          textColor={row.original.submission.status?.text}
         />
       </span>
     ),
